@@ -3,12 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package pl.polsl.viktordidyk.baconcipher.controller;
-import pl.polsl.viktordidyk.baconcipher.model.MessageCannotBeNonLatin;
+import java.io.FileNotFoundException;
+import pl.polsl.viktordidyk.baconcipher.model.InvalidUserInputException;
 import pl.polsl.viktordidyk.baconcipher.model.StrategyA;
 import pl.polsl.viktordidyk.baconcipher.model.StrategyB;
-import pl.polsl.viktordidyk.baconcipher.model.StrategyC;
 import pl.polsl.viktordidyk.baconcipher.view.View;
-import pl.polsl.viktordidyk.baconcipher.model.Transcription;
+import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
 
 
 
@@ -17,23 +17,33 @@ import pl.polsl.viktordidyk.baconcipher.model.Transcription;
  *
  * @author SuperStudent.PL
  */
-public class Controller {
+public class Controller {    
     public static void main(String[] args) {
+
         View view = new View();
-        Transcription transcription = new Transcription();
-        String messageToEncode = "qwert 123";
+        String messageToEncode = "qwe";
         StrategyA strategyA = new StrategyA();
         StrategyB strategyB = new StrategyB();
-        StrategyC strategyC = new StrategyC();
+        Transcriptor transcriptor;
+        String csvFileName = "transcriptionRules.csv";
+        //csvFileName = view.getTranscriptionRulesFileName();
+        try {
+            transcriptor = new Transcriptor(csvFileName);
+            transcriptor.setTranscriptionStrategy(strategyA);
+            try {
+                String encodedMessage = transcriptor.encode(messageToEncode);
+                view.print(encodedMessage);
+
+            }
+            catch (InvalidUserInputException exc) {
+                view.showErrorMessage(exc.getMessage());
+            }  
+        }
+        catch (FileNotFoundException exc) {
+            view.showErrorMessage("Please check that your rule file exists ");
+        }
+       
         
-        transcription.setTranscriptionStrategy(strategyB);
-        try{
-            String encodedMessage = transcription.encode(messageToEncode);
-            view.print(encodedMessage);
-        }
-        catch (MessageCannotBeNonLatin exc) {
-            view.showErrorMessage(exc.getMessage());
-        }
     }
    
 }

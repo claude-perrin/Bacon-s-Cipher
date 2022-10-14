@@ -6,8 +6,10 @@ package pl.polsl.viktordidyk.baconcipher.model;
 
 /**
  *
- * @author admin
+ * @author viktor
  */
-public class FileHandler {
-    
+public class InvalidUserInputException extends Exception {
+    public InvalidUserInputException(String errorMessage) {
+        super(errorMessage);
+    }
 }

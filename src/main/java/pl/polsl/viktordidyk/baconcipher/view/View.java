@@ -19,4 +19,10 @@ public class View {
     public void showErrorMessage(String errorMessage){
         System.err.println(errorMessage);
     }
+    
+    public String getTranscriptionRulesFileName(){
+        Scanner sc= new Scanner(System.in); 
+        System.out.print("Enter Transcription Rules File Name: ");  
+        return sc.nextLine(); 
+    }
 }

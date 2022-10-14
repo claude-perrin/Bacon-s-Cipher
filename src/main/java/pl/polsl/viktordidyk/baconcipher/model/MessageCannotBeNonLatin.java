@@ -8,7 +8,7 @@ package pl.polsl.viktordidyk.baconcipher.model;
  *
  * @author admin
  */
-public class MessageCannotBeNonLatin extends Exception {
+public class MessageCannotBeNonLatin extends InvalidUserInputException {
     public MessageCannotBeNonLatin(String errorMessage) {
         super(errorMessage);
     }

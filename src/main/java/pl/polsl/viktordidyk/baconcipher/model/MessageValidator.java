@@ -9,12 +9,19 @@ package pl.polsl.viktordidyk.baconcipher.model;
  * @author admin
  */
 public class MessageValidator {
-    // multi words 
-    private boolean latinAlphabetOnly(String message){
-        return message.matches("\\w+");
+    private boolean nonEmptyString(String message) {
+        return message.strip().length() != 0;
     }
     
-    public void validateMessage(String message) throws MessageCannotBeNonLatin {
+    private boolean latinAlphabetOnly(String message){
+        return message.matches("[a-zA-Z\\s]+?");
+    }
+    
+    public void validateMessage(String message) throws InvalidUserInputException {
+        if (this.nonEmptyString(message) == false) {
+            throw new MessageCannotBeEmpty("Provided input is empty");
+        }
+        
         if (latinAlphabetOnly(message) == false) {
             throw new MessageCannotBeNonLatin("Please write the message in plain english");
         }

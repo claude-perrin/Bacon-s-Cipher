@@ -6,14 +6,10 @@ package pl.polsl.viktordidyk.baconcipher.model;
 
 /**
  *
- * @author admin
+ * @author viktor
  */
-public class StrategyC extends BaconCipherStrategy {
-    public String encode(String message) {
-        return "Encode StrategyC";
-    };
-
-    public String decode(String message) {
-        return "Decode StrategyC";
-    };
+public class MessageCannotBeEmpty extends InvalidUserInputException{
+    public MessageCannotBeEmpty(String errorMessage) {
+        super(errorMessage);
+    }
 }
