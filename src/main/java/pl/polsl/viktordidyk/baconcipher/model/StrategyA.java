@@ -16,29 +16,6 @@ import java.util.Random;
  * @author admin
  */
 public class StrategyA extends BaconCipherStrategy {
- 
-    private String generateRandomStringSequence(int stringLength) {
-        int leftLimit = 'a'; 
-        int rightLimit = 'z'; 
-        Random random = new Random();
-
-        String generatedString = random.ints(leftLimit, rightLimit + 1)
-          .limit(stringLength)
-          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
-          .toString();
-
-        return generatedString;
-    }   
-    
-    protected char useStrategyTranscriptionAlgorithm(char character) {
-        if (Character.isUpperCase(character)) {
-            return 'a';
-        }
-        return 'b';
-    };
-    
-
-    
     protected String generateEncryptedMessage(String binarySequence){
         String encryptedMessage = "";
         String generatedString = generateRandomStringSequence(binarySequence.length());
@@ -51,5 +28,23 @@ public class StrategyA extends BaconCipherStrategy {
             }
         }
         return encryptedMessage;
+    };    
+    private String generateRandomStringSequence(int stringLength) {
+        int leftLimit = 'a'; 
+        int rightLimit = 'z'; 
+        Random random = new Random();
+
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+          .limit(stringLength)
+          .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+          .toString();
+
+        return generatedString;
+    };
+    protected char useStrategyTranscriptionAlgorithm(char character) {
+        if (Character.isUpperCase(character)) {
+            return 'a';
+        }
+        return 'b';
     };
 }

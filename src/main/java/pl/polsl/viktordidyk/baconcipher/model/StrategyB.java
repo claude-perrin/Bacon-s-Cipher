@@ -16,23 +16,6 @@ import java.util.Random;
  * @author admin
  */
 public class StrategyB extends BaconCipherStrategy {
-    
-    // Do generation in proper limit A-M, N-Z
-    private char generateRandomCharacter(char leftLimit) {
-            Random random = new Random();
-            boolean shouldUseUppercase = random.nextBoolean();
-            char randomCharacter = (char)(random.nextInt(13)+leftLimit);
-            return shouldUseUppercase ? Character.toUpperCase(randomCharacter): randomCharacter;
-    } 
-    
-    protected char useStrategyTranscriptionAlgorithm(char character) {
-        char lowerCaseCharacter = Character.toLowerCase(character);
-        if ('a' <= lowerCaseCharacter && lowerCaseCharacter <= 'm') {
-            return 'a';
-        }
-        return 'b';
-    };
-    
     protected String generateEncryptedMessage(String binarySequence){
         String encryptedMessage = "";
         for(int i = 0; i < binarySequence.length(); i++) {
@@ -47,4 +30,19 @@ public class StrategyB extends BaconCipherStrategy {
         }
         return encryptedMessage;
     };
+    
+    private char generateRandomCharacter(char leftLimit) {
+            Random random = new Random();
+            boolean shouldUseUppercase = random.nextBoolean();
+            char randomCharacter = (char)(random.nextInt(13)+leftLimit);
+            return shouldUseUppercase ? Character.toUpperCase(randomCharacter): randomCharacter;
+    }; 
+    
+    protected char useStrategyTranscriptionAlgorithm(char character) {
+        char lowerCaseCharacter = Character.toLowerCase(character);
+        if ('a' <= lowerCaseCharacter && lowerCaseCharacter <= 'm') {
+            return 'a';
+        }
+        return 'b';
+    };   
 }
