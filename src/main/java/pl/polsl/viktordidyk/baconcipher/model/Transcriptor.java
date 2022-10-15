@@ -16,7 +16,7 @@ public class Transcriptor {
     private BaconCipherStrategy transcriptionStrategy;
     private final MessageValidator messageValidator;
     private final String filePath;
-    private final Map<String, String> transcriptionRules;
+    private final Map<Character, String> transcriptionRules;
     
        
     public Transcriptor(String filePath) throws FileNotFoundException {
@@ -30,9 +30,9 @@ public class Transcriptor {
         }
     }
     
-    private Map<String, String> readTranscriptionRulesCsv(String filePath) throws IOException {
+    private Map<Character, String> readTranscriptionRulesCsv(String filePath) throws IOException {
         FileManager fileManager = new FileManager();
-        Map<String, String> rules = fileManager.readCsv(filePath);
+        Map<Character, String> rules = fileManager.readCsv(filePath);
         return rules;
     }
     
@@ -46,11 +46,12 @@ public class Transcriptor {
     }
     
     public String encode(String message) throws InvalidUserInputException {
-        messageValidator.validateMessage(message);
-        return transcriptionStrategy.encode(message);
+        String messageToEncrypt = message.replaceAll("\\s+","");
+        messageValidator.validateMessage(messageToEncrypt);
+        return transcriptionStrategy.encrypt(messageToEncrypt);
     }
     
     public String decode(String message) {
-        return transcriptionStrategy.decode(message);
+        return transcriptionStrategy.decrypt(message);
     }
 }

@@ -15,15 +15,15 @@ import java.util.Map;
  * @author viktor
  */
 public class FileManager {
-    public Map<String, String> readCsv(String filePath) throws IOException {
-        HashMap<String, String> map = new HashMap<>();
+    public Map<Character, String> readCsv(String filePath) throws IOException {
+        HashMap<Character, String> map = new HashMap<>();
         String line;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while ((line = reader.readLine()) != null) {
                 String[] keyValuePair = line.split(",", 2);
                 // Maybe to do try
                 if (keyValuePair.length == 2) {
-                    String key = keyValuePair[0];
+                    char key = keyValuePair[0].charAt(0);
                     String value = keyValuePair[1];
                     map.put(key, value);
                 } else {

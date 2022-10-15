@@ -5,24 +5,29 @@
 package pl.polsl.viktordidyk.baconcipher.model;
 
 /**
- * Letters from "A" until "M" are encoded as A
- * Letters from "N" until "Z" are encoded as B
+ * Letters from "A" until "M" are encoded as a
+ * Letters from "N" until "Z" are encoded as b
  * @author admin
  */
 public class StrategyB extends BaconCipherStrategy {
     
-    protected char useStrategyEncryptionRule(char character){
+    protected char useStrategyTranscriptionAlgorithm(char character) {
         if ('A' <= character && character <= 'M') {
-            return 'A';
+            return 'a';
         }
-        return 'B';
+        return 'b';
     };
     
-    public String encode(String message) {
+    protected String getCharacterBinarySequence(char key) {
+        return "A";
+    };
+
+    
+    public String encrypt(String message) {
         return "Encode StrategyB";
     };
 
-    public String decode(String message) {
+    public String decrypt(String message) {
         return "Decode StrategyB";
     };
 }
