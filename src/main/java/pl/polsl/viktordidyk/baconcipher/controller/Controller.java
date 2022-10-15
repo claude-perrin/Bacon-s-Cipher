@@ -4,6 +4,7 @@
  */
 package pl.polsl.viktordidyk.baconcipher.controller;
 import java.io.FileNotFoundException;
+import java.util.Random;
 import pl.polsl.viktordidyk.baconcipher.model.InvalidUserInputException;
 import pl.polsl.viktordidyk.baconcipher.model.StrategyA;
 import pl.polsl.viktordidyk.baconcipher.model.StrategyB;
@@ -20,15 +21,15 @@ import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
 public class Controller {
     public static void main(String[] args) {
         View view = new View();
-        String messageToEncode = "lol nelol";
+        String messageToEncode = "hallo iam domi";
         StrategyA strategyA = new StrategyA();
-//        StrategyB strategyB = new StrategyB();
+        StrategyB strategyB = new StrategyB();
         Transcriptor transcriptor;
         String csvFileName = "transcriptionRules.csv";
 //        csvFileName = view.getTranscriptionRulesFileName();
         try {
             transcriptor = new Transcriptor(csvFileName);
-            transcriptor.setTranscriptionStrategy(strategyA);
+            transcriptor.setTranscriptionStrategy(strategyB);
             try {
                 String encodedMessage = transcriptor.encode(messageToEncode);
                 view.print(encodedMessage);

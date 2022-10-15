@@ -4,30 +4,47 @@
  */
 package pl.polsl.viktordidyk.baconcipher.model;
 
+import java.util.Random;
+
 /**
  * Letters from "A" until "M" are encoded as a
  * Letters from "N" until "Z" are encoded as b
+ * 
+ * Example:
+ * Encrypted Message |    decryption   |    Secret Message
+ * GkwRt ceUya porrE <-> aabbb aabba bbbba <-> D O G
  * @author admin
  */
 public class StrategyB extends BaconCipherStrategy {
     
+    // Do generation in proper limit A-M, N-Z
+    private char generateRandomCharacter(char leftLimit) {
+            Random random = new Random();
+            boolean shouldUseUppercase = random.nextBoolean();
+            char randomCharacter = (char)(random.nextInt(13)+leftLimit);
+            return shouldUseUppercase ? Character.toUpperCase(randomCharacter): randomCharacter;
+    } 
+    
     protected char useStrategyTranscriptionAlgorithm(char character) {
-        if ('A' <= character && character <= 'M') {
+        char lowerCaseCharacter = Character.toLowerCase(character);
+        if ('a' <= lowerCaseCharacter && lowerCaseCharacter <= 'm') {
             return 'a';
         }
         return 'b';
     };
     
-    protected String getCharacterBinarySequence(char key) {
-        return "A";
-    };
-
-    
-    public String encrypt(String message) {
-        return "Encode StrategyB";
-    };
-
-    public String decrypt(String message) {
-        return "Decode StrategyB";
+    protected String generateEncryptedMessage(String binarySequence){
+        String encryptedMessage = "";
+        for(int i = 0; i < binarySequence.length(); i++) {
+            if (binarySequence.charAt(i) == 'a') {
+                char generatedChar = generateRandomCharacter('a');
+                encryptedMessage += generatedChar;
+            }
+            else {
+                char generatedChar = generateRandomCharacter('n');
+                encryptedMessage += generatedChar;
+            }
+        }
+        return encryptedMessage;
     };
 }
