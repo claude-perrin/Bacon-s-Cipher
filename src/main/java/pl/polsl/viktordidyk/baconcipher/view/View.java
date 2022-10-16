@@ -16,13 +16,30 @@ public class View {
         System.out.println(message);
     }
     
-    public void showErrorMessage(String errorMessage){
+    public void showErrorMessage(String errorMessage) {
         System.err.println(errorMessage);
     }
     
-    public String getTranscriptionRulesFileName(){
+    public String getTranscriptionRulesFileName() {
         Scanner sc= new Scanner(System.in); 
         System.out.print("Enter Transcription Rules File Name: ");  
         return sc.nextLine(); 
     }
+
+    public void printHelp() {
+        String help = """
+                      Usage:
+                      BaconCipher [-d | -e] [-f <fileName>]
+                      
+                      Options:
+                      -d decrypt message
+                      -e encrypt message
+                      -f provide file name, defualt is "transcriptionRules.csv"
+                      -h displays help
+                      
+                      It's possible to run program without any flags
+                      """;
+        print(help);
+    }
+    
 }

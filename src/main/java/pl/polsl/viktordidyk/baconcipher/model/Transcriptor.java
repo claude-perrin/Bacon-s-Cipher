@@ -3,10 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package pl.polsl.viktordidyk.baconcipher.model;
-import java.io.FileNotFoundException;
+
+import pl.polsl.viktordidyk.baconcipher.model.exceptions.FileWithRulesIsNotFound;
 import java.io.IOException;
 import pl.polsl.viktordidyk.baconcipher.model.helper.FileManager;
 import java.util.Map;
+import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 
 /**
  *
@@ -19,14 +21,16 @@ public class Transcriptor {
     private final Map<Character, String> transcriptionRules;
     
        
-    public Transcriptor(String filePath) throws FileNotFoundException {
+    public Transcriptor(String filePath) throws FileWithRulesIsNotFound {
         this.filePath = filePath;
         this.messageValidator = new MessageValidator();
         try {
             this.transcriptionRules = this.readTranscriptionRulesCsv(this.filePath);
         }
         catch (IOException exc) {
-            throw new FileNotFoundException();
+            throw new FileWithRulesIsNotFound("""
+                                              Provided FilePath doesn't exist or was deleted
+                                               please check that therule file exists""");
         }
     }
     
@@ -45,13 +49,13 @@ public class Transcriptor {
         this.transcriptionStrategy.dictionary = transcriptionRules;
     }
     
-    public String encode(String message) throws InvalidUserInputException {
+    public String encrypt(String message) throws EncryptionFailed {
         String messageToEncrypt = message.replaceAll("\\s+","");
         messageValidator.validateMessage(messageToEncrypt);
         return transcriptionStrategy.encrypt(messageToEncrypt);
     }
     
-    public String decode(String message) {
+    public String decrypt(String message) {
         return transcriptionStrategy.decrypt(message);
     }
 }

@@ -4,6 +4,10 @@
  */
 package pl.polsl.viktordidyk.baconcipher.model;
 
+import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException;
+import pl.polsl.viktordidyk.baconcipher.model.exceptions.MessageCannotBeNonLatin;
+import pl.polsl.viktordidyk.baconcipher.model.exceptions.MessageCannotBeEmpty;
+
 /**
  *
  * @author admin

@@ -3,14 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package pl.polsl.viktordidyk.baconcipher.controller;
-import java.io.FileNotFoundException;
-import java.util.Random;
-import pl.polsl.viktordidyk.baconcipher.model.InvalidUserInputException;
-import pl.polsl.viktordidyk.baconcipher.model.StrategyA;
-import pl.polsl.viktordidyk.baconcipher.model.StrategyB;
-import pl.polsl.viktordidyk.baconcipher.view.View;
-import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
-
+import pl.polsl.viktordidyk.baconcipher.controller.ModelView;
+import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException;
 
 
 
@@ -20,30 +14,18 @@ import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
  */
 public class Controller {
     public static void main(String[] args) {
-        View view = new View();
-        String messageToEncode = "hallo iam domi";
-        StrategyA strategyA = new StrategyA();
-        StrategyB strategyB = new StrategyB();
-        Transcriptor transcriptor;
-        String csvFileName = "transcriptionRules.csv";
-//        csvFileName = view.getTranscriptionRulesFileName();
-        try {
-            transcriptor = new Transcriptor(csvFileName);
-            transcriptor.setTranscriptionStrategy(strategyB);
-            try {
-                String encodedMessage = transcriptor.encode(messageToEncode);
-                view.print(encodedMessage);
-                String decodedMessage = transcriptor.decode(encodedMessage);
-                view.print(decodedMessage);
-
+        boolean happyFlag = true;
+        ModelView modelView = new ModelView();
+        // do some manipulation with arguments, parse them
+        // if user is retarded repeat
+        while (happyFlag){
+            try{
+                modelView.run();
+                happyFlag = false;
             }
             catch (InvalidUserInputException exc) {
-                view.showErrorMessage(exc.getMessage());
-            }  
+                exc.getMessage();
+            }
         }
-        catch (FileNotFoundException exc) {
-            view.showErrorMessage("Please check that your rule file exists ");
-        } 
-    };
-   
+    }
 };
