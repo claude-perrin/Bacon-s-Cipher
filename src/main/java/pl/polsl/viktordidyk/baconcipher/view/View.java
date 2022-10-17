@@ -32,10 +32,12 @@ public class View {
                       BaconCipher [-d | -e] [-f <fileName>]
                       
                       Options:
-                      -d decrypt message
-                      -e encrypt message
-                      -f provide file name, defualt is "transcriptionRules.csv"
+                      -d decrypt message, requires message to be provided afterwards, e.g. -d AFeFSAeSFAfdswr
+                      -e encrypt message, filename to be encrypted
+                      -f provide file name to be decrypted, format must be ".txt"
                       -h displays help
+                      
+                      
                       
                       It's possible to run program without any flags
                       """;

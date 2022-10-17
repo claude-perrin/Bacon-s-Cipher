@@ -3,28 +3,25 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package pl.polsl.viktordidyk.baconcipher.controller;
-import pl.polsl.viktordidyk.baconcipher.controller.ModelView;
+import java.io.IOException;
+import java.util.Map;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException;
-
 
 
 /**
  *
  * @author SuperStudent.PL
  */
-public class Controller {
-    public static void main(String[] args) {
-        boolean happyFlag = true;
+public class Controller {    
+    public static void main(String[] args) throws IOException {
         ModelView modelView = new ModelView();
-        // do some manipulation with arguments, parse them
-        // if user is retarded repeat
-        while (happyFlag){
-            try{
-                modelView.run();
-                happyFlag = false;
+        while (modelView.terminateFlag == false){
+            Map<String, String> userCommand = new ArgumentParser().parseCmdArguments(args);
+            try {
+                modelView.run(userCommand);
             }
             catch (InvalidUserInputException exc) {
-                exc.getMessage();
+                modelView.view.showErrorMessage(exc.getMessage());
             }
         }
     }

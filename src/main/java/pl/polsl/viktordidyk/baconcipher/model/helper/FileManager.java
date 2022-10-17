@@ -7,6 +7,9 @@ package pl.polsl.viktordidyk.baconcipher.model.helper;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,5 +35,11 @@ public class FileManager {
             }
         }
         return map;
+    }
+    
+    public String readTxt(String fileName) throws IOException {
+        Path filePath = Paths.get(fileName);
+        String content = Files.readString(filePath);
+        return content;
     }
 }

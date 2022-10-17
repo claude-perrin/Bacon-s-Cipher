@@ -4,7 +4,7 @@
  */
 package pl.polsl.viktordidyk.baconcipher.model;
 
-import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException;
+import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.MessageCannotBeNonLatin;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.MessageCannotBeEmpty;
 
@@ -21,7 +21,7 @@ public class MessageValidator {
         return message.matches("[a-zA-Z\\s]+?");
     }
     
-    public void validateMessage(String message) throws InvalidUserInputException {
+    public void validateMessage(String message) throws EncryptionFailed {
         if (this.nonEmptyString(message) == false) {
             throw new MessageCannotBeEmpty("Provided input is empty");
         }

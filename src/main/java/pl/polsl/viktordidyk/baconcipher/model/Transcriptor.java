@@ -17,25 +17,25 @@ import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 public class Transcriptor {
     private BaconCipherStrategy transcriptionStrategy;
     private final MessageValidator messageValidator;
-    private final String filePath;
+    private final String filePath = "transcriptionRules.csv";
     private final Map<Character, String> transcriptionRules;
+    private FileManager fileManager;
     
-       
-    public Transcriptor(String filePath) throws FileWithRulesIsNotFound {
-        this.filePath = filePath;
+
+    public Transcriptor() throws FileWithRulesIsNotFound {
         this.messageValidator = new MessageValidator();
+        this.fileManager = new FileManager();
         try {
             this.transcriptionRules = this.readTranscriptionRulesCsv(this.filePath);
         }
         catch (IOException exc) {
             throw new FileWithRulesIsNotFound("""
-                                              Provided FilePath doesn't exist or was deleted
-                                               please check that therule file exists""");
+                                               FilePath doesn't exist or was deleted
+                                               please check that the rule file exists""");
         }
     }
     
     private Map<Character, String> readTranscriptionRulesCsv(String filePath) throws IOException {
-        FileManager fileManager = new FileManager();
         Map<Character, String> rules = fileManager.readCsv(filePath);
         return rules;
     }
@@ -49,10 +49,18 @@ public class Transcriptor {
         this.transcriptionStrategy.dictionary = transcriptionRules;
     }
     
-    public String encrypt(String message) throws EncryptionFailed {
-        String messageToEncrypt = message.replaceAll("\\s+","");
-        messageValidator.validateMessage(messageToEncrypt);
-        return transcriptionStrategy.encrypt(messageToEncrypt);
+    public String encrypt(String fileName) throws EncryptionFailed {
+        try {
+            String rawMessage = fileManager.readTxt(fileName);
+            String messageToEncrypt = rawMessage.replaceAll("\\s+","");
+            messageValidator.validateMessage(messageToEncrypt);
+            return transcriptionStrategy.encrypt(messageToEncrypt);
+        }
+        catch (IOException exc) {
+            throw new EncryptionFailed("""
+                                              Provided FilePath for encryption is not found
+                                              please check that the file exists""");
+        }
     }
     
     public String decrypt(String message) {
