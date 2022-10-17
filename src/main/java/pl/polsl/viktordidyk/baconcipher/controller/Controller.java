@@ -13,7 +13,7 @@ import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputExcepti
  * @author SuperStudent.PL
  */
 public class Controller {    
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException {        
         ModelView modelView = new ModelView();
         while (modelView.terminateFlag == false){
             Map<String, String> userCommand = new ArgumentParser().parseCmdArguments(args);
@@ -23,6 +23,7 @@ public class Controller {
             catch (InvalidUserInputException exc) {
                 modelView.view.showErrorMessage(exc.getMessage());
             }
+            args = modelView.view.getUserCommand();
         }
     }
 };

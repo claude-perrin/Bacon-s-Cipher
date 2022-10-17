@@ -28,7 +28,12 @@ public class ArgumentParser {
                 );
             return encryptCommand;
         }
-        
+        else if ("q".equals(argumentLine)) {
+            Map<String, String> terminateCommand = Map.ofEntries(
+                entry("mode", "terminate")
+                );
+            return terminateCommand;
+        }
         Map<String, String> helpCommand = Map.ofEntries(entry("mode", "help"));
         return helpCommand;
     };

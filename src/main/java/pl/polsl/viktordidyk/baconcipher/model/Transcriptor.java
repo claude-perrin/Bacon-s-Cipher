@@ -52,7 +52,7 @@ public class Transcriptor {
     public String encrypt(String fileName) throws EncryptionFailed {
         try {
             String rawMessage = fileManager.readTxt(fileName);
-            String messageToEncrypt = rawMessage.replaceAll("\\s+","");
+            String messageToEncrypt = rawMessage.replaceAll("[\\s,.]+","");
             messageValidator.validateMessage(messageToEncrypt);
             return transcriptionStrategy.encrypt(messageToEncrypt);
         }

@@ -25,7 +25,6 @@ public class ModelView {
     public void run(Map<String, String> userCommand) throws InvalidUserInputException {
         // -----------------
         // user should choose strategy !
-        // switch statements depending on mode !!
         // user should be able to terminate the program with q() !!!!!!!
         // --------------
         view = new View();
@@ -43,6 +42,9 @@ public class ModelView {
             case "decrypt" -> {
                 String decodedMessage = transcriptor.decrypt(userCommand.get("messageToDecrypt"));
                 view.print(decodedMessage);
+            }
+            case "terminate" -> {
+               this.terminateFlag = true;
             }
         }
         

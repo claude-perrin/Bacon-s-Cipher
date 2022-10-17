@@ -25,6 +25,13 @@ public class View {
         System.out.print("Enter Transcription Rules File Name: ");  
         return sc.nextLine(); 
     }
+    
+    public String[] getUserCommand() {
+        Scanner sc= new Scanner(System.in);
+        this.print("Enter next command: ");  
+        String userCommand= sc.nextLine();
+        return userCommand.split(" ");
+    }
 
     public void printHelp() {
         String help = """
@@ -36,7 +43,7 @@ public class View {
                       -e encrypt message, filename to be encrypted
                       -f provide file name to be decrypted, format must be ".txt"
                       -h displays help
-                      
+                      q quit
                       
                       
                       It's possible to run program without any flags
