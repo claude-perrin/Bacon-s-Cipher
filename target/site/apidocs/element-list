@@ -1,0 +1,5 @@
+pl.polsl.viktordidyk.baconcipher.controller
+pl.polsl.viktordidyk.baconcipher.model
+pl.polsl.viktordidyk.baconcipher.model.exceptions
+pl.polsl.viktordidyk.baconcipher.model.helper
+pl.polsl.viktordidyk.baconcipher.view
