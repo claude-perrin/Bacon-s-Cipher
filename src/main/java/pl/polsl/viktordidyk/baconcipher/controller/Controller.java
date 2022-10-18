@@ -20,6 +20,8 @@ public class Controller {
             Map<String, String> userCommand = new ArgumentParser().parseCmdArguments(args);
             try {
                 modelView.run(userCommand);
+                if (modelView.terminateFlag == true)
+                    break;
             }
             catch (InvalidUserInputException exc) {
                 modelView.view.showErrorMessage(exc.getMessage());
