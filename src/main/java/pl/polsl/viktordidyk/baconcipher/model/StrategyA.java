@@ -7,15 +7,22 @@ package pl.polsl.viktordidyk.baconcipher.model;
 import java.util.Random;
 
 /**
+ * Transcript the message in the following way:
  * Capital letter is encrypted as a
  * Non-capital letter is encrypted as b
  * 
  * Example:
  *     Encrypted Message |    decryption   |    Secret Message
  *     GkwRt ceUya porrE <-> abbab bbabb bbbba <-> P I G
- * @author admin
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class StrategyA extends BaconCipherStrategy {
+    /**
+     * Generates random letters to noise the encrypted message
+     * @param binarySequence
+     * @return 
+     */
     protected String generateEncryptedMessage(String binarySequence){
         String encryptedMessage = "";
         String generatedString = generateRandomStringSequence(binarySequence.length());
@@ -29,6 +36,11 @@ public class StrategyA extends BaconCipherStrategy {
         }
         return encryptedMessage;
     };    
+    /**
+     * Get random character that is used to noise the encrypted message
+     * @param leftLimit
+     * @return character
+     */
     private String generateRandomStringSequence(int stringLength) {
         int leftLimit = 'a'; 
         int rightLimit = 'z'; 
@@ -41,6 +53,11 @@ public class StrategyA extends BaconCipherStrategy {
 
         return generatedString;
     };
+    /**
+     * The strategy Transcription rule
+     * @param character
+     * @return 
+     */
     protected char useStrategyTranscriptionAlgorithm(char character) {
         if (Character.isUpperCase(character)) {
             return 'a';

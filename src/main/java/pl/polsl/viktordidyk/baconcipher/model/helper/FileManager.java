@@ -14,17 +14,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- *
- * @author viktor
+ * Responsible for reading files
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class FileManager {
+    /**
+     * Reads file in csv format
+     * @param filePath
+     * @return csv as a map, first column as a key second as a value
+     * @throws IOException 
+     */
+    
     public Map<Character, String> readCsv(String filePath) throws IOException {
         HashMap<Character, String> map = new HashMap<>();
         String line;
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while ((line = reader.readLine()) != null) {
                 String[] keyValuePair = line.split(",", 2);
-                // Maybe to do try
                 if (keyValuePair.length == 2) {
                     char key = keyValuePair[0].charAt(0);
                     String value = keyValuePair[1];
@@ -37,6 +44,12 @@ public class FileManager {
         return map;
     }
     
+    /**
+     *  Reads file in txt format
+     * @param fileName
+     * @return Content of txt file as a String
+     * @throws IOException 
+     */
     public String readTxt(String fileName) throws IOException {
         Path filePath = Paths.get(fileName);
         String content = Files.readString(filePath);

@@ -8,10 +8,18 @@ import java.util.Map;
 import static java.util.Map.entry;
 
 /**
- *
- * @author viktor
+ * Parser whose responsibility is to get users input and return correct command
+ * 
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class ArgumentParser {
+    
+/**
+ * With a help of regex the matching user input is taken and parsed.
+ * @param args command line parameters that are being parsed
+ * @return Map that has a key "mode" and a value as a command to be executed
+ */
     public Map<String, String> parseCmdArguments(String[] args) {
         String argumentLine = String.join(" ", args);
         if (argumentLine.matches("^(-d)\\s[a-zA-Z]+$")) {

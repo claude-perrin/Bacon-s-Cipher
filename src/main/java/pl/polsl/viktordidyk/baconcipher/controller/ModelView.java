@@ -13,8 +13,9 @@ import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
 import pl.polsl.viktordidyk.baconcipher.view.View;
 
 /**
- *
- * @author viktor
+ * Responsible for managing Model logic and view
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class ModelView {
     protected View view;
@@ -22,10 +23,14 @@ public class ModelView {
     private StrategyB strategyB;
     protected boolean terminateFlag = false;
     
+    /**
+     * Run the main flow of the program, e.g. encoding, decoding
+     * @param userCommand user input as a map.
+     * @throws InvalidUserInputException 
+     */
     public void run(Map<String, String> userCommand) throws InvalidUserInputException {
         // -----------------
         // user should choose strategy !
-        // user should be able to terminate the program with q() !!!!!!!
         // --------------
         view = new View();
         strategyA = new StrategyA();

@@ -7,15 +7,23 @@ package pl.polsl.viktordidyk.baconcipher.model;
 import java.util.Random;
 
 /**
+ * Transcript the message in the following way:
+ * 
  * Letters from "A" until "M" are encoded as a
  * Letters from "N" until "Z" are encoded as b
  * 
  * Example:
  * Encrypted Message |    decryption   |    Secret Message
  * GkwRt ceUya porrE <-> aabbb aabba bbbba <-> D O G
- * @author admin
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class StrategyB extends BaconCipherStrategy {
+    /**
+     * Generates random letters to noise the encrypted message
+     * @param binarySequence
+     * @return 
+     */
     protected String generateEncryptedMessage(String binarySequence){
         String encryptedMessage = "";
         for(int i = 0; i < binarySequence.length(); i++) {
@@ -31,6 +39,12 @@ public class StrategyB extends BaconCipherStrategy {
         return encryptedMessage;
     };
     
+    /**
+     * Get random character that is used to noise the encrypted message
+     * @param leftLimit
+     * @return character
+     */
+    
     private char generateRandomCharacter(char leftLimit) {
             Random random = new Random();
             boolean shouldUseUppercase = random.nextBoolean();
@@ -38,6 +52,11 @@ public class StrategyB extends BaconCipherStrategy {
             return shouldUseUppercase ? Character.toUpperCase(randomCharacter): randomCharacter;
     }; 
     
+    /**
+     * The strategy Transcription rule
+     * @param character
+     * @return 
+     */
     protected char useStrategyTranscriptionAlgorithm(char character) {
         char lowerCaseCharacter = Character.toLowerCase(character);
         if ('a' <= lowerCaseCharacter && lowerCaseCharacter <= 'm') {

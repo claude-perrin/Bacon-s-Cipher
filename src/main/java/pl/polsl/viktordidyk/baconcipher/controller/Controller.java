@@ -9,8 +9,9 @@ import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputExcepti
 
 
 /**
- *
- * @author SuperStudent.PL
+ * Main class which is responsible for parsing user input, and termination of the program
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class Controller {    
     public static void main(String[] args) throws IOException {        
@@ -27,3 +28,4 @@ public class Controller {
         }
     }
 };
+

@@ -6,7 +6,8 @@ package pl.polsl.viktordidyk.baconcipher.model.exceptions;
 
 /**
  *
- * @author admin
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class MessageCannotBeNonLatin extends EncryptionFailed {
     public MessageCannotBeNonLatin(String errorMessage) {

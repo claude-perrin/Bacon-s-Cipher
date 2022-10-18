@@ -6,7 +6,8 @@ package pl.polsl.viktordidyk.baconcipher.model.exceptions;
 
 /**
  *
- * @author viktor
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class FileWithRulesIsNotFound extends InvalidUserInputException{
     public FileWithRulesIsNotFound(String errorMessage) {

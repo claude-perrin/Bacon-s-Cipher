@@ -5,8 +5,9 @@
 package pl.polsl.viktordidyk.baconcipher.model.exceptions;
 
 /**
- *
- * @author viktor
+ * Base class for Encryption exceptions
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class EncryptionFailed extends InvalidUserInputException{
     public EncryptionFailed(String errorMessage) {

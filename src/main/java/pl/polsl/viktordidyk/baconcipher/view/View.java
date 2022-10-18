@@ -7,8 +7,10 @@ package pl.polsl.viktordidyk.baconcipher.view;
 import java.util.Scanner;
 
 /**
- *
- * @author SuperStudent.PL
+ * Responsible for interacting with the user getting output/input
+ * 
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class View {
     
@@ -36,9 +38,10 @@ public class View {
     public void printHelp() {
         String help = """
                       Usage:
-                      BaconCipher [-d | -e] [-f <fileName>]
+                      BaconCipher -s <strategy> [-d <message> | -e -f <fileName>]
                       
                       Options:
+                      -s choose transcription strategy, available inputs are "A", "B"
                       -d decrypt message, requires message to be provided afterwards, e.g. -d AFeFSAeSFAfdswr
                       -e encrypt message, filename to be encrypted
                       -f provide file name to be decrypted, format must be ".txt"
