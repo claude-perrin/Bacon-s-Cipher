@@ -11,9 +11,6 @@ import java.util.Random;
  * Capital letter is encrypted as a
  * Non-capital letter is encrypted as b
  * 
- * Example:
- *     Encrypted Message |    decryption   |    Secret Message
- *     GkwRt ceUya porrE <-> abbab bbabb bbbba <-> P I G
  * @author Viktor Didyk
  * @version 1.0
  */

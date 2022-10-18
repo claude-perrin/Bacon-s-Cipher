@@ -14,14 +14,14 @@ import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputExcepti
  * @version 1.0
  */
 public class Controller {    
-    public static void main(String[] args) throws IOException {        
-        ModelView modelView = new ModelView();
-        while (modelView.terminateFlag == false){
+    public static void main(String[] args) throws IOException {     
+        while (true){
+            ModelView modelView = new ModelView();
             Map<String, String> userCommand = new ArgumentParser().parseCmdArguments(args);
+            if ("terminate".equals(userCommand.get("mode"))) 
+                break;
             try {
                 modelView.run(userCommand);
-                if (modelView.terminateFlag == true)
-                    break;
             }
             catch (InvalidUserInputException exc) {
                 modelView.view.showErrorMessage(exc.getMessage());

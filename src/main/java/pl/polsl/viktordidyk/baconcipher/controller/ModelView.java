@@ -4,6 +4,7 @@
  */
 package pl.polsl.viktordidyk.baconcipher.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException;
@@ -18,10 +19,19 @@ import pl.polsl.viktordidyk.baconcipher.view.View;
  * @version 1.0
  */
 public class ModelView {
-    protected View view;
-    private StrategyA strategyA;
-    private StrategyB strategyB;
-    protected boolean terminateFlag = false;
+    protected final View view;
+    private final StrategyA strategyA;
+    private final StrategyB strategyB;
+    private final Transcriptor transcriptor;
+    
+    public ModelView() throws FileNotFoundException {
+        view = new View();
+        strategyA = new StrategyA();
+        strategyB = new StrategyB();
+        transcriptor = new Transcriptor();      
+    }
+    
+    
     
     /**
      * Run the main flow of the program, e.g. encoding, decoding
@@ -32,12 +42,7 @@ public class ModelView {
         // -----------------
         // user should choose strategy !
         // --------------
-        view = new View();
-        strategyA = new StrategyA();
-        strategyB = new StrategyB();
-        Transcriptor transcriptor = new Transcriptor();
-        transcriptor.setTranscriptionStrategy(strategyB);
-
+        this.transcriptor.setTranscriptionStrategy(strategyB);
         switch (userCommand.get("mode")){
             case "help" -> view.printHelp();
             case "encrypt" -> {
@@ -47,9 +52,6 @@ public class ModelView {
             case "decrypt" -> {
                 String decodedMessage = transcriptor.decrypt(userCommand.get("messageToDecrypt"));
                 view.print(decodedMessage);
-            }
-            case "terminate" -> {
-               this.terminateFlag = true;
             }
         }
         

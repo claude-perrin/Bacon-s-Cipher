@@ -12,9 +12,6 @@ import java.util.Random;
  * Letters from "A" until "M" are encoded as a
  * Letters from "N" until "Z" are encoded as b
  * 
- * Example:
- * Encrypted Message |    decryption   |    Secret Message
- * GkwRt ceUya porrE <-> aabbb aabba bbbba <-> D O G
  * @author Viktor Didyk
  * @version 1.0
  */
