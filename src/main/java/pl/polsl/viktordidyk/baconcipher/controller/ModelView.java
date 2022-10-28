@@ -24,8 +24,8 @@ public class ModelView {
     private final StrategyB strategyB;
     private final Transcriptor transcriptor;
     
-    public ModelView() throws FileNotFoundException {
-        view = new View();
+    public ModelView(View view) throws FileNotFoundException {
+        this.view = view;
         strategyA = new StrategyA();
         strategyB = new StrategyB();
         transcriptor = new Transcriptor();      

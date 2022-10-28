@@ -11,6 +11,10 @@ import java.util.Random;
  * Capital letter is encrypted as a
  * Non-capital letter is encrypted as b
  * 
+ * 
+ * pig  -> aaab aaab bbba  -> FFFg SSSf gggA
+ * 
+ * 
  * @author Viktor Didyk
  * @version 1.0
  */

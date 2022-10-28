@@ -1,0 +1,8 @@
+-------------------------------------------------------------------------------
+Test set: pl.polsl.viktordidyk.baconcipher.model.MessageValidatorTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.012 s <<< FAILURE! - in pl.polsl.viktordidyk.baconcipher.model.MessageValidatorTest
+testValidateMessage  Time elapsed: 0.008 s  <<< FAILURE!
+org.opentest4j.AssertionFailedError: Message should be caught as it contains non-latin symbols.
+	at pl.polsl.viktordidyk.baconcipher.model.MessageValidatorTest.testValidateMessage(MessageValidatorTest.java:67)
+

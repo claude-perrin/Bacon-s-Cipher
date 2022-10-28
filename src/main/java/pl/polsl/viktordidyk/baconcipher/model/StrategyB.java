@@ -38,14 +38,14 @@ public class StrategyB extends BaconCipherStrategy {
     
     /**
      * Get random character that is used to noise the encrypted message
-     * @param leftLimit
+     * @param startingChar
      * @return character
      */
     
-    private char generateRandomCharacter(char leftLimit) {
+    private char generateRandomCharacter(char startingChar) {
             Random random = new Random();
             boolean shouldUseUppercase = random.nextBoolean();
-            char randomCharacter = (char)(random.nextInt(13)+leftLimit);
+            char randomCharacter = (char)(random.nextInt(13)+startingChar);
             return shouldUseUppercase ? Character.toUpperCase(randomCharacter): randomCharacter;
     }; 
     

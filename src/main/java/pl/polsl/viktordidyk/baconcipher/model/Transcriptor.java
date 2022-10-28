@@ -41,7 +41,6 @@ public class Transcriptor {
     }
     
     
-    
     /**
      * Using FileManager try to read needed csvFile
      * @param filePath
@@ -61,6 +60,10 @@ public class Transcriptor {
     public void setTranscriptionStrategy(BaconCipherStrategy transcriptionStrategy) {
         this.transcriptionStrategy = transcriptionStrategy;
         this.transcriptionStrategy.dictionary = transcriptionRules;
+    }
+    
+    public BaconCipherStrategy getTranscriptionStrategy() {
+        return transcriptionStrategy;
     }
     
     /**
