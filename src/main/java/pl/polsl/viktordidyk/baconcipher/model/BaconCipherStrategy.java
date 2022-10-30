@@ -37,15 +37,15 @@ abstract class BaconCipherStrategy {
     }
     
     
-    protected <K, V> K getKey(Map<K, V> map, V value)
+    protected Character getKey(Map<Character, String> map, String value)
     {
-        for (Map.Entry<K, V> entry: map.entrySet())
+        for (Map.Entry<Character, String> entry: map.entrySet())
         {
             if (value.equals(entry.getValue())) {
                 return entry.getKey();
             }
         }
-        return null;
+        return '#';
     }
     
     protected String getEncryptedBinarySequence(String secretMessage){

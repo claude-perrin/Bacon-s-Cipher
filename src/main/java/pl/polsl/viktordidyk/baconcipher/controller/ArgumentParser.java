@@ -5,9 +5,11 @@
 package pl.polsl.viktordidyk.baconcipher.controller;
 
 
+import pl.polsl.viktordidyk.baconcipher.model.StrategyA;
 import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException;
+
 
 /**
  *
@@ -15,13 +17,15 @@ import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputExcepti
  */
 public class ArgumentParser {
     interface TranscriptionMode { 
-        String execute(Transcriptor transcriptor, String filePath) throws EncryptionFailed;
+        String execute(Transcriptor transcriptor, char strategy, String filePath) throws EncryptionFailed;
     }
     
     public boolean checkTerminationCommand(String[] args) {
         String argumentLine = String.join(" ", args);
         return "q".equals(argumentLine);
     }
+    
+    
 /**
  * With a help of regex the matching user input is taken and parsed.
  * @param args command line parameters that are being parsed
@@ -30,12 +34,18 @@ public class ArgumentParser {
  */
     public TranscriptionMode parseCmdArguments(String[] args) throws InvalidUserInputException {
         String argumentLine = String.join(" ", args);
-        if (argumentLine.matches("^(-d)\\s[a-zA-Z]+$")) {
-            TranscriptionMode decrypt = (transcriptor, message) -> transcriptor.decrypt(message);
+        if (argumentLine.matches("^(-s)\\s[ABab]\\s(-d)\\s[a-zA-Z]+$")) {
+            TranscriptionMode decrypt = (transcriptor, strategy, message) -> {
+                transcriptor.setStrategy(strategy);
+                return transcriptor.decrypt(message);
+            };
             return decrypt;
         }
-        else if (argumentLine.matches("^((-e -f)|(-ef)|(-fe)){1}\\s[a-zA-Z]+.txt$")) {
-            TranscriptionMode encrypt = (transcriptor, filePath) -> transcriptor.encrypt(filePath);
+        else if (argumentLine.matches("^(-s)\\s[ABab]\\s((-e -f)|(-ef)|(-fe)){1}\\s[a-zA-Z]+.txt$")) {
+            TranscriptionMode encrypt = (transcriptor, strategy, filePath) -> {
+                transcriptor.setStrategy(strategy);
+                return transcriptor.encrypt(filePath);
+            };
             return encrypt;
         } 
         throw new InvalidUserInputException();

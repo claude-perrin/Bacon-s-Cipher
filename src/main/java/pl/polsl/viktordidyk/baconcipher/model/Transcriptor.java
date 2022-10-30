@@ -38,14 +38,20 @@ public class Transcriptor {
         return rules;
     }
     
-    /**
+        /**
      * Sets the strategy to be used for encoding and decoding.
-     * @param transcriptionStrategy
+     * @param requiredStratefy
      */
-    public void setTranscriptionStrategy(BaconCipherStrategy transcriptionStrategy) {
-        this.transcriptionStrategy = transcriptionStrategy;
+    public void setStrategy(char requiredStrategy) {
+        if (Character.toLowerCase(requiredStrategy) == 'a') 
+            this.transcriptionStrategy =  new StrategyA();
+        else
+            this.transcriptionStrategy =  new StrategyB();
         this.transcriptionStrategy.dictionary = transcriptionRules;
     }
+    
+
+
     
     public String encrypt(String fileName) throws EncryptionFailed {
         try {

@@ -23,24 +23,23 @@ public class Controller {
         View view = new View();
         try {
             Transcriptor transcriptor = new Transcriptor();
-            StrategyA strategyA = new StrategyA();
-            transcriptor.setTranscriptionStrategy(strategyA);
             while (true) {
-                if (args.length != 0) {
+                try {
+                    TranscriptionMode userCommand = new ArgumentParser().parseCmdArguments(args);
                     String filePath = args[args.length -1];
-                    try {
-                        TranscriptionMode userCommand = new ArgumentParser().parseCmdArguments(args);
-                        String message = userCommand.execute(transcriptor, filePath);
-                        view.print(message);
-                    }
-                    catch (InvalidUserInputException exc) {
-                        view.showErrorMessage(exc.getMessage());
-                        view.printHelp();
-                    }
+                    char strategy = args[1].charAt(0);
+                    String message = userCommand.execute(transcriptor, strategy, filePath);
+                    view.print(message);
+                }
+                catch (InvalidUserInputException exc) {
+                    view.showErrorMessage(exc.getMessage());
+                    view.printHelp();
                 }
                 args = view.getUserCommand();
+
+                }
             }
-        }
+        
         catch (FileNotFoundException exc) {
             view.showErrorMessage("File with rules is not found, please check that it is included in the directory");
         }
