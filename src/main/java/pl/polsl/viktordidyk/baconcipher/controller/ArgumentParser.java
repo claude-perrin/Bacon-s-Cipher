@@ -6,35 +6,43 @@ package pl.polsl.viktordidyk.baconcipher.controller;
 
 import java.util.Map;
 import static java.util.Map.entry;
+import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
+import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
+import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException;
 
 /**
  *
  * @author viktor
  */
 public class ArgumentParser {
+<<<<<<< Updated upstream
     public Map<String, String> parseCmdArguments(String[] args) {
+=======
+    interface TranscriptionMode { 
+        String execute(Transcriptor transcriptor, String filePath) throws EncryptionFailed;
+    }
+    
+    public boolean checkTerminationCommand(String[] args) {
+        String argumentLine = String.join(" ", args);
+        return "q".equals(argumentLine);
+    }
+/**
+ * With a help of regex the matching user input is taken and parsed.
+ * @param args command line parameters that are being parsed
+ * @return Map that has a key "mode" and a value as a command to be executed
+ * @throws pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException
+ */
+    public TranscriptionMode parseCmdArguments(String[] args) throws InvalidUserInputException {
+>>>>>>> Stashed changes
         String argumentLine = String.join(" ", args);
         if (argumentLine.matches("^(-d)\\s[a-zA-Z]+$")) {
-            Map<String, String> decryptCommand = Map.ofEntries(
-                entry("mode", "decrypt"),
-                    entry("messageToDecrypt", args[args.length -1])
-                );
-            return decryptCommand;
+            TranscriptionMode decrypt = (transcriptor, message) -> transcriptor.decrypt(message);
+            return decrypt;
         }
         else if (argumentLine.matches("^((-e -f)|(-ef)|(-fe)){1}\\s[a-zA-Z]+.txt$")) {
-            Map<String, String> encryptCommand = Map.ofEntries(
-                entry("mode", "encrypt"),
-                    entry("fileName", args[args.length -1])
-                );
-            return encryptCommand;
-        }
-        else if ("q".equals(argumentLine)) {
-            Map<String, String> terminateCommand = Map.ofEntries(
-                entry("mode", "terminate")
-                );
-            return terminateCommand;
-        }
-        Map<String, String> helpCommand = Map.ofEntries(entry("mode", "help"));
-        return helpCommand;
+            TranscriptionMode encrypt = (transcriptor, filePath) -> transcriptor.encrypt(filePath);
+            return encrypt;
+        } 
+        throw new InvalidUserInputException();
     };
 }

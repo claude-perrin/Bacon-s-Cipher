@@ -9,6 +9,9 @@ package pl.polsl.viktordidyk.baconcipher.model.exceptions;
  * @author viktor
  */
 public class InvalidUserInputException extends Exception {
+    public InvalidUserInputException() {
+        super();
+    }
     public InvalidUserInputException(String errorMessage) {
         super(errorMessage);
     }

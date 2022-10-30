@@ -36,13 +36,16 @@ public class View {
     public void printHelp() {
         String help = """
                       Usage:
+<<<<<<< Updated upstream
                       BaconCipher [-d | -e] [-f <fileName>]
+=======
+                      -s <strategy> [-d <message> | -e -f <fileName>]
+>>>>>>> Stashed changes
                       
                       Options:
                       -d decrypt message, requires message to be provided afterwards, e.g. -d AFeFSAeSFAfdswr
                       -e encrypt message, filename to be encrypted
                       -f provide file name to be decrypted, format must be ".txt"
-                      -h displays help
                       q quit
                       
                       

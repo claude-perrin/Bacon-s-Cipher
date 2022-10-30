@@ -8,7 +8,7 @@ package pl.polsl.viktordidyk.baconcipher.model.exceptions;
  *
  * @author viktor
  */
-public class MessageCannotBeEmpty extends EncryptionFailed{
+public class MessageCannotBeEmpty extends EncryptionFailed {
     public MessageCannotBeEmpty(String errorMessage) {
         super(errorMessage);
     }
