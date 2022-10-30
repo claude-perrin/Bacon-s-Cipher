@@ -4,7 +4,7 @@
  */
 package pl.polsl.viktordidyk.baconcipher.model;
 
-import pl.polsl.viktordidyk.baconcipher.model.exceptions.FileWithRulesIsNotFound;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import pl.polsl.viktordidyk.baconcipher.model.helper.FileManager;
 import java.util.Map;
@@ -22,16 +22,14 @@ public class Transcriptor {
     private FileManager fileManager;
     
 
-    public Transcriptor() throws FileWithRulesIsNotFound {
+    public Transcriptor() throws FileNotFoundException {
         this.messageValidator = new MessageValidator();
         this.fileManager = new FileManager();
         try {
             this.transcriptionRules = this.readTranscriptionRulesCsv(this.filePath);
         }
         catch (IOException exc) {
-            throw new FileWithRulesIsNotFound("""
-                                               FilePath doesn't exist or was deleted
-                                               please check that the rule file exists""");
+            throw new FileNotFoundException();
         }
     }
     

@@ -4,8 +4,7 @@
  */
 package pl.polsl.viktordidyk.baconcipher.controller;
 
-import java.util.Map;
-import static java.util.Map.entry;
+
 import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException;
@@ -15,9 +14,6 @@ import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputExcepti
  * @author viktor
  */
 public class ArgumentParser {
-<<<<<<< Updated upstream
-    public Map<String, String> parseCmdArguments(String[] args) {
-=======
     interface TranscriptionMode { 
         String execute(Transcriptor transcriptor, String filePath) throws EncryptionFailed;
     }
@@ -33,7 +29,6 @@ public class ArgumentParser {
  * @throws pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException
  */
     public TranscriptionMode parseCmdArguments(String[] args) throws InvalidUserInputException {
->>>>>>> Stashed changes
         String argumentLine = String.join(" ", args);
         if (argumentLine.matches("^(-d)\\s[a-zA-Z]+$")) {
             TranscriptionMode decrypt = (transcriptor, message) -> transcriptor.decrypt(message);
