@@ -14,18 +14,21 @@ import pl.polsl.viktordidyk.baconcipher.view.View;
 
 
 /**
- *
- * @author SuperStudent.PL
+ * Main class that starts the flow
+ * @author viktor
  */
 
 public class Controller {    
     public static void main(String[] args) throws FileNotFoundException {
         View view = new View();
+        ArgumentParser argumentParser = new ArgumentParser();
         try {
             Transcriptor transcriptor = new Transcriptor();
             while (true) {
+                if (argumentParser.checkTerminationCommand(args))
+                    break;
                 try {
-                    TranscriptionMode userCommand = new ArgumentParser().parseCmdArguments(args);
+                    TranscriptionMode userCommand = argumentParser.parseCmdArguments(args);
                     String filePath = args[args.length -1];
                     char strategy = args[1].charAt(0);
                     String message = userCommand.execute(transcriptor, strategy, filePath);
@@ -36,7 +39,6 @@ public class Controller {
                     view.printHelp();
                 }
                 args = view.getUserCommand();
-
                 }
             }
         

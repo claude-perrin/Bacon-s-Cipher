@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 /**
  *
- * @author admin
+ * @author Viktor Didyk
  */
 abstract class BaconCipherStrategy {
     protected Map<Character, String> dictionary;
