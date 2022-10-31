@@ -7,8 +7,10 @@ package pl.polsl.viktordidyk.baconcipher.view;
 import java.util.Scanner;
 
 /**
- *
- * @author SuperStudent.PL
+ * Responsible for interacting with the user getting output/input
+ * 
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class View {
     

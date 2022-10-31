@@ -11,8 +11,10 @@ import java.util.Map;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 
 /**
- *
- * @author admin
+ * Class that manages whole business logic.
+ * 
+ * @author Viktor Didyk
+ * @version 1.0
  */
 public class Transcriptor {
     private BaconCipherStrategy transcriptionStrategy;
@@ -21,7 +23,10 @@ public class Transcriptor {
     private final Map<Character, String> transcriptionRules;
     private FileManager fileManager;
     
-
+    /**
+     * Constructor that aggregates needed classes
+     * @throws FileNotFoundException 
+     */
     public Transcriptor() throws FileNotFoundException {
         this.messageValidator = new MessageValidator();
         this.fileManager = new FileManager();
@@ -33,14 +38,20 @@ public class Transcriptor {
         }
     }
     
+    /**
+     * Using FileManager try to read needed csvFile
+     * @param filePath
+     * @return content of csv file
+     * @throws IOException 
+     */
     private Map<Character, String> readTranscriptionRulesCsv(String filePath) throws IOException {
         Map<Character, String> rules = fileManager.readCsv(filePath);
         return rules;
     }
     
-        /**
+    /**
      * Sets the strategy to be used for encoding and decoding.
-     * @param requiredStratefy
+     * @param requiredStrategy the char which represent the strategy to be used
      */
     public void setStrategy(char requiredStrategy) {
         if (Character.toLowerCase(requiredStrategy) == 'a') 
@@ -50,9 +61,12 @@ public class Transcriptor {
         this.transcriptionStrategy.dictionary = transcriptionRules;
     }
     
-
-
-    
+    /**
+     * Starts encryption
+     * @param fileName
+     * @return Encrypted message
+     * @throws EncryptionFailed 
+     */
     public String encrypt(String fileName) throws EncryptionFailed {
         try {
             String rawMessage = fileManager.readTxt(fileName);
@@ -67,6 +81,11 @@ public class Transcriptor {
         }
     }
     
+    /**
+     * Starts decryption
+     * @param message
+     * @return decrypted message
+     */
     public String decrypt(String message) {
         return transcriptionStrategy.decrypt(message);
     }

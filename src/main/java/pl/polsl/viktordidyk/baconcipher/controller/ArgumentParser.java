@@ -16,10 +16,18 @@ import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputExcepti
  * @author viktor
  */
 public class ArgumentParser {
+    /**
+     * Interface for a lambda that allows to define encrypt or decrypt and execute it
+     */
     interface TranscriptionMode { 
         String execute(Transcriptor transcriptor, char strategy, String filePath) throws EncryptionFailed;
     }
     
+    /**
+     * If user provided "q" exit the program
+     * @param args
+     * @return boolean whether the loop should be broken
+     */
     public boolean checkTerminationCommand(String[] args) {
         String argumentLine = String.join(" ", args);
         return "q".equals(argumentLine);

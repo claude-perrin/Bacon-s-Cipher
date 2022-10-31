@@ -13,9 +13,10 @@ import pl.polsl.viktordidyk.baconcipher.view.View;
 
 
 
-/**
- * Main class that starts the flow
- * @author viktor
+/** 
+ * Main class which is responsible for parsing user input, and termination of the program
+ * @author Viktor Didyk
+ * @version 1.0
  */
 
 public class Controller {    
