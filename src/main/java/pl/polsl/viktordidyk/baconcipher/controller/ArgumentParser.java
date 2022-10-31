@@ -5,7 +5,6 @@
 package pl.polsl.viktordidyk.baconcipher.controller;
 
 
-import pl.polsl.viktordidyk.baconcipher.model.StrategyA;
 import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException;
