@@ -61,6 +61,10 @@ public class Transcriptor {
         this.transcriptionStrategy.dictionary = transcriptionRules;
     }
     
+    public BaconCipherStrategy getTranscriptionStrategy() {
+        return this.transcriptionStrategy;
+    }
+    
     /**
      * Starts encryption
      * @param fileName
