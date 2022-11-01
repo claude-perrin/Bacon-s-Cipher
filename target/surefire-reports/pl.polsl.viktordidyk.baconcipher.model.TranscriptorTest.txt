@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: pl.polsl.viktordidyk.baconcipher.model.TranscriptorTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.001 sec <<< FAILURE!
+pl.polsl.viktordidyk.baconcipher.model.TranscriptorTest.testEncryptStrategyA()  Time elapsed: 0.001 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "pl.polsl.viktordidyk.baconcipher.model.Transcriptor.setStrategy(char)" because "this.transcriptor" is null
+	at pl.polsl.viktordidyk.baconcipher.model.TranscriptorTest.testEncryptStrategyA(TranscriptorTest.java:57)
+
+pl.polsl.viktordidyk.baconcipher.model.TranscriptorTest.testEncrypStrategyB()  Time elapsed: 0 sec  <<< FAILURE!
+java.lang.NullPointerException: Cannot invoke "pl.polsl.viktordidyk.baconcipher.model.Transcriptor.setStrategy(char)" because "this.transcriptor" is null
+	at pl.polsl.viktordidyk.baconcipher.model.TranscriptorTest.testEncrypStrategyB(TranscriptorTest.java:75)
+
