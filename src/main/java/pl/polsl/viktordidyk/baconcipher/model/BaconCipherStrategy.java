@@ -118,6 +118,9 @@ abstract class BaconCipherStrategy {
      
         
     protected abstract String generateEncryptedMessage(String binarySequence);
+    
+    public abstract String toString();
+
 
 };
     

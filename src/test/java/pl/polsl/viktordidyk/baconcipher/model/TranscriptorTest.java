@@ -36,7 +36,7 @@ public class TranscriptorTest {
     @CsvSource({"GkqwdFgJRKOMiqZ,pig"})
     public void testDecryptStrategyA(String message, String expResult) {
         System.out.println("testDecryptStrategyA");
-        char strategyA = 'a';
+        StrategyA strategyA = new StrategyA();
         this.transcriptor.setStrategy(strategyA);
         String result = transcriptor.decrypt(message);
         assertEquals(expResult, result);
@@ -47,7 +47,7 @@ public class TranscriptorTest {
     public void testDecryptStrategyB(String message) {
         System.out.println("testDecryptStrategyB");
         String expResult = "gct";
-        char strategyB = 'b';
+        StrategyB strategyB = new StrategyB();
         this.transcriptor.setStrategy(strategyB);
         String result = transcriptor.decrypt(message);
         assertEquals(expResult, result);
@@ -64,7 +64,7 @@ public class TranscriptorTest {
     public void testEncryptStrategyA() {
         String binaryEncryption = "abbbbabaaaaabba";
         String fileName = "testEncrypt.txt";
-        char strategyA = 'a';
+        StrategyA strategyA = new StrategyA();
         this.transcriptor.setStrategy(strategyA);
         try {
 
@@ -88,7 +88,7 @@ public class TranscriptorTest {
     public void testEncrypStrategyB() {
             String binaryEncryption = "abbbbabaaaaabba";
         String fileName = "testEncrypt.txt";
-        char strategyB = 'b';
+        StrategyB strategyB = new StrategyB();
         this.transcriptor.setStrategy(strategyB);
         try {
             String encryptionResult = transcriptor.encrypt(fileName);

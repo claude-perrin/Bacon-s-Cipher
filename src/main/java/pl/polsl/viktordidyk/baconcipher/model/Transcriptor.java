@@ -51,13 +51,10 @@ public class Transcriptor {
     
     /**
      * Sets the strategy to be used for encoding and decoding.
-     * @param requiredStrategy the char which represent the strategy to be used
+     * @param strategy
      */
-    public void setStrategy(char requiredStrategy) {
-        if (Character.toLowerCase(requiredStrategy) == 'a') 
-            this.transcriptionStrategy =  new StrategyA();
-        else
-            this.transcriptionStrategy =  new StrategyB();
+    public void setStrategy(BaconCipherStrategy strategy) {
+        this.transcriptionStrategy =  strategy;
         this.transcriptionStrategy.dictionary = transcriptionRules;
     }
     
@@ -67,22 +64,14 @@ public class Transcriptor {
     
     /**
      * Starts encryption
-     * @param fileName
+     * @param message
      * @return Encrypted message
      * @throws EncryptionFailed 
      */
-    public String encrypt(String fileName) throws EncryptionFailed {
-        try {
-            String rawMessage = fileManager.readTxt(fileName);
-            String messageToEncrypt = rawMessage.replaceAll("[\\s,.]+","");
+    public String encrypt(String message) throws EncryptionFailed {
+            String messageToEncrypt = message.replaceAll("[\\s,.]+","");
             messageValidator.validateMessage(messageToEncrypt);
             return transcriptionStrategy.encrypt(messageToEncrypt);
-        }
-        catch (IOException exc) {
-            throw new EncryptionFailed("""
-                                              Provided FilePath for encryption is not found
-                                              please check that the file exists""");
-        }
     }
     
     /**

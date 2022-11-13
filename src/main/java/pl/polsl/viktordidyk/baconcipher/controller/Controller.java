@@ -5,11 +5,14 @@
 package pl.polsl.viktordidyk.baconcipher.controller;
 
 import java.io.FileNotFoundException;
-import pl.polsl.viktordidyk.baconcipher.controller.ArgumentParser.TranscriptionMode;
+import java.io.IOException;
 import pl.polsl.viktordidyk.baconcipher.model.StrategyA;
+import pl.polsl.viktordidyk.baconcipher.model.StrategyB;
+
 import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
-import pl.polsl.viktordidyk.baconcipher.model.exceptions.InvalidUserInputException;
-import pl.polsl.viktordidyk.baconcipher.view.View;
+import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
+import pl.polsl.viktordidyk.baconcipher.view.*;
+import pl.polsl.viktordidyk.baconcipher.model.helper.FileManager;
 
 
 
@@ -20,31 +23,54 @@ import pl.polsl.viktordidyk.baconcipher.view.View;
  */
 
 public class Controller {    
-    public static void main(String[] args) throws FileNotFoundException {
-        View view = new View();
-        ArgumentParser argumentParser = new ArgumentParser();
+    FrameWindow view;
+    Transcriptor transcriptor;
+    
+    public Controller() {
+    }
+    
+    public static void main(String[] args) {
+        Controller controller = new Controller();
+        controller.view = new FrameWindow(controller);
         try {
-            Transcriptor transcriptor = new Transcriptor();
-            while (true) {
-                if (argumentParser.checkTerminationCommand(args))
-                    break;
-                try {
-                    TranscriptionMode userCommand = argumentParser.parseCmdArguments(args);
-                    String filePath = args[args.length -1];
-                    char strategy = args[1].charAt(0);
-                    String message = userCommand.execute(transcriptor, strategy, filePath);
-                    view.print(message);
-                }
-                catch (InvalidUserInputException exc) {
-                    view.showErrorMessage(exc.getMessage());
-                    view.printHelp();
-                }
-                args = view.getUserCommand();
-                }
-            }
-        
-        catch (FileNotFoundException exc) {
-            view.showErrorMessage("File with rules is not found, please check that it is included in the directory");
+            controller.transcriptor = new Transcriptor();
+        } catch (FileNotFoundException ex) {
+            controller.view.showPopUpMessage("File with rules is not found");
+        }
+    };
+    
+    public void setChosenStrategy(String strategy) {
+        switch (strategy) {
+            case "A" -> this.transcriptor.setStrategy(new StrategyA());
+            case "B" -> this.transcriptor.setStrategy(new StrategyB());   
         }
     }
-};
+    
+    public void startEncryption(String filePath) {
+        setChosenStrategy(this.view.getChosenStrategy());
+        FileManager fileManager = new FileManager();
+        try {        
+            String info = fileManager.readTxt(filePath);
+            String encryptedMessage = this.transcriptor.encrypt(info);
+            this.view.setEncryptionMessageTextField(encryptedMessage);
+        } 
+        
+        catch (EncryptionFailed ex) {
+            this.view.showPopUpMessage("Something went wrong");
+        } 
+        catch (NullPointerException ex) {
+            this.view.showPopUpMessage("You didn't choose the strategy");
+        }
+        catch (IOException ex) {
+            this.view.showPopUpMessage("File doesn't exist");
+        } 
+        this.view.appendHistoryAction(String.format("Encryption (%s) from file %s", this.transcriptor.getTranscriptionStrategy(),filePath));
+    }
+    public void startDecryption(String messageToDecrypt) {
+        setChosenStrategy(this.view.getChosenStrategy());
+        String decryptedMessage = this.transcriptor.decrypt(messageToDecrypt);
+        this.view.showPopUpMessage(decryptedMessage);
+        this.view.appendHistoryAction(String.format("Decryption (%s) of %s", this.transcriptor.getTranscriptionStrategy() ,messageToDecrypt));
+    }
+    
+}

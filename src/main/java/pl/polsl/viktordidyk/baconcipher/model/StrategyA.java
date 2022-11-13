@@ -67,4 +67,8 @@ public class StrategyA extends BaconCipherStrategy {
         }
         return 'b';
     };
+    
+    public String toString() {
+        return "Strategy A";
+    }
 }
