@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"pl.polsl.viktordidyk.baconcipher.controller"},{"l":"pl.polsl.viktordidyk.baconcipher.model"},{"l":"pl.polsl.viktordidyk.baconcipher.model.exceptions"},{"l":"pl.polsl.viktordidyk.baconcipher.model.helper"},{"l":"pl.polsl.viktordidyk.baconcipher.view"}];updateSearchResults();
