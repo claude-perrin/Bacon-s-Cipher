@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Start Page</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Choose Transcription Strategy</h2>
+        <label for="strategy">Choose a strategy:</label>
+        <select name="strategy" id="strategy">
+          <option value="A">A</option>
+          <option value="B">B</option>
+        </select>
+        
+        <h2>Encryption</h2>
+        <form action="startEncryption" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="strategyForEncryption" id="strategyForEncryption" value="">
+            <script>
+                function uh(){
+                document.getElementById('strategyForEncryption').innerHTML
+                = document.getElementById('strategy').value;
+    }
+            </script>
+            Select a file to be encrypted:
+            <input type="file" id="encryptionFile" name="encryptionFile"><br><br>
+            <input type="submit" onclick="uh()">
+        </form><br><br>
+
+        Encrypted Text: 
+        <input type="text" id="encryptedText" name="encryptedText" value="" readonly><br><br>
+        
+        <h2>Decryption</h2>
+        <form action="startDecryption" method="post">
+            <input type="text" id="decryption" name="decryption" value=""><br><br>
+            <input type="submit" value="Decrypt"/>
+         </form><br>
+        
+        Decrypted Text: 
+        <input type="text" id="decryptedText" name="decryptedText" value="" readonly><br><br>
+
+    </body>
+</html>
