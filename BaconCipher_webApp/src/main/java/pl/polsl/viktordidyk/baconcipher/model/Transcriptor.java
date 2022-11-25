@@ -54,7 +54,7 @@ public class Transcriptor {
      * @param strategy
      */
     public void setStrategy(BaconCipherStrategy strategy) {
-        this.transcriptionStrategy =  strategy;
+        this.transcriptionStrategy = strategy;
         this.transcriptionStrategy.dictionary = transcriptionRules;
     }
     

@@ -1,14 +1,12 @@
 package pl.polsl.viktordidyk.baconcipher.servlets;
 
 import java.io.*;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
+import pl.polsl.viktordidyk.baconcipher.model.BaconCipherStrategy;
+
 import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 import pl.polsl.viktordidyk.baconcipher.model.helper.FileManager;
@@ -26,15 +24,16 @@ import pl.polsl.viktordidyk.baconcipher.model.helper.FileManager;
   maxRequestSize = 1024 * 1024 * 100   // 100 MB
 )
 public class EncryptServlet extends HttpServlet {
-    Transcriptor transcriptor;
+    private final Transcriptor transcriptor;
 
+    public EncryptServlet() throws FileNotFoundException {
+        this.transcriptor = new Transcriptor();
+            }
    
     public String startEncryptionFlow(InputStream filecontent) throws IOException, EncryptionFailed {
         FileManager fileManager = new FileManager();
-        this.transcriptor = new Transcriptor();
         String messageToEncrypt = fileManager.readTxtFromInputStream(filecontent);
         return this.transcriptor.encrypt(messageToEncrypt);
-        
     }
     
     @Override
@@ -44,23 +43,18 @@ public class EncryptServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
 
         Part filePart = request.getPart("encryptionFile");
-        Enumeration<String> e = request.getParameterNames();
-        out.println(e);
-           while (e.hasMoreElements()) {
-            String name = (String) e.nextElement();
-            out.println(name + " = " + request.getParameter(name));
+        String strategy_character = request.getParameter("strategyForEncryption");
+        BaconCipherStrategy strategy = ServletHelper.getTranscriptionStrategy(strategy_character.charAt(0));
+        this.transcriptor.setStrategy(strategy);
+        InputStream filecontent = filePart.getInputStream();
+        try {
+            String encryptedMessage = this.startEncryptionFlow(filecontent);
+            out.println("Encrypted message is: \n" + encryptedMessage);
         }
-//        strategyForEncryption
-//        InputStream filecontent = filePart.getInputStream();
-//        try {
-//            String encryptedMessage = this.startEncryptionFlow(filecontent);
-//            out.println("Encrypted message is: \n" + encryptedMessage);
-//
-//        }
-//        catch (EncryptionFailed exc) {
-//            out.println("Encryption failed due to \n" + exc.getMessage());
-//
-//        }
+        catch (EncryptionFailed exc) {
+            out.println("Encryption failed due to \n" + exc.getMessage());
+
+        }
         
     }
 }

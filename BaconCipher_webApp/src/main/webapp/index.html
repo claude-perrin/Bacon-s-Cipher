@@ -14,16 +14,12 @@
         
         <h2>Encryption</h2>
         <form action="startEncryption" method="post" enctype="multipart/form-data">
-            <input type="hidden" name="strategyForEncryption" id="strategyForEncryption" value="">
-            <script>
-                function uh(){
-                document.getElementById('strategyForEncryption').innerHTML
-                = document.getElementById('strategy').value;
-    }
-            </script>
+            <input type="hidden"  type="text" name="strategyForEncryption" id="strategyForEncryption" value="text default">
+
             Select a file to be encrypted:
             <input type="file" id="encryptionFile" name="encryptionFile"><br><br>
-            <input type="submit" onclick="uh()">
+            <input type="submit" onclick="document.getElementById('strategyForEncryption').value = document.getElementById('strategy').value;">
+
         </form><br><br>
 
         Encrypted Text: 
@@ -31,8 +27,10 @@
         
         <h2>Decryption</h2>
         <form action="startDecryption" method="post">
+            <input type="hidden"  type="text" name="strategyForDecryption" id="strategyForDecryption" value="text default">
+
             <input type="text" id="decryption" name="decryption" value=""><br><br>
-            <input type="submit" value="Decrypt"/>
+            <input type="submit" onclick="document.getElementById('strategyForDecryption').value = document.getElementById('strategy').value;">
          </form><br>
         
         Decrypted Text: 
