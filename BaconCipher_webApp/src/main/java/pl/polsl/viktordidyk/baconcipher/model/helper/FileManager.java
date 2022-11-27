@@ -7,6 +7,7 @@ package pl.polsl.viktordidyk.baconcipher.model.helper;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -15,6 +16,8 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -31,7 +34,7 @@ public class FileManager {
     public Map<Character, String> readCsv(String filePath) throws IOException {
         HashMap<Character, String> map = (HashMap<Character, String>) Files.readAllLines(Paths.get(filePath))
             .stream()
-            .map(line->line.split(","))
+            .map(line->line.split("="))
             .filter(line->line.length>1)
             .collect(Collectors.toMap(key-> key[0].charAt(0), value -> value[1]));
         return map;
@@ -49,13 +52,18 @@ public class FileManager {
         return content;
     }
     
-    public String readTxtFromInputStream(InputStream inputStream) throws IOException {
+    public String readTxtFromInputStream(InputStream inputStream) throws FileNotFoundException {
         ByteArrayOutputStream result = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
-        for (int length; (length = inputStream.read(buffer)) != -1; ) {
-            result.write(buffer, 0, length);
-        }
-        return result.toString("UTF-8");
+            try {
+                for (int length; (length = inputStream.read(buffer)) != -1; ) {
+                    result.write(buffer, 0, length);
+                }
+                 return result.toString("UTF-8");
+            } 
+            catch (IOException ex) {
+                throw new FileNotFoundException("File format is incorrect, please provide a proper txt file");
+            }
     }
     public Map<Character, String> readCsvFromInputStream(String filePath) throws IOException {
         try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(filePath)) {

@@ -4,7 +4,8 @@
  */
 
 /**
- * The begin of the program flow
- * Responsible for showing output to a user and User's arguments parsing and giving the correct input to the model.
+ * Servlets for handling POST and GET request from.
+ * Responsible for passing output to the user and giving the correct input to the model.
+ * @authot ViktorDidyk
  */
 package pl.polsl.viktordidyk.baconcipher.servlets;
