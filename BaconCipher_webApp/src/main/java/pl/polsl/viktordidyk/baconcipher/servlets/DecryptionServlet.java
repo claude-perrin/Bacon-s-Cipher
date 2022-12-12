@@ -9,14 +9,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import pl.polsl.viktordidyk.baconcipher.dao.HistoryDAO;
 import pl.polsl.viktordidyk.baconcipher.entities.HistoryModel;
 import pl.polsl.viktordidyk.baconcipher.model.BaconCipherStrategy;
@@ -31,19 +30,21 @@ import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 public class DecryptionServlet extends HttpServlet {
 
     private final Transcriptor transcriptor;
-    private HistoryDAO historyDao;
     private String mode = "decryption";
+    private HistoryDAO historyDao;
+
+    
     /**
      * Load transcriptor
      * @throws FileNotFoundException 
      */
     public DecryptionServlet() throws FileNotFoundException {
+        this.transcriptor = new Transcriptor();
         try {
             this.historyDao = HistoryDAO.getInstance();
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
-        }   
-        this.transcriptor = new Transcriptor();
+        }    
     }
    
     /**
@@ -70,41 +71,72 @@ public class DecryptionServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
-            Integer errorCounter = 0;            
-            String strategy_character = request.getParameter("strategyForDecryption");
+            Integer errorCounter = 0;
+            Integer visitNumber = 0;
+            Integer visitNumberBeforeNoon = 0;
+            Integer visitNumberAfterNoon = 0;
+            
+            String strategyCharacter = request.getParameter("strategyForDecryption");
             String messageToDecrypt = request.getParameter("decryption");
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("errorCounter")) {
                         errorCounter = Integer.valueOf(cookie.getValue());
-                        break;
+                    }
+                    else if (cookie.getName().equals("visitNumber")) {
+                        visitNumber = Integer.valueOf(cookie.getValue());
+                    }
+                    else if (cookie.getName().equals("visitNumberAfterNoon")) {
+                        visitNumberAfterNoon = Integer.valueOf(cookie.getValue());
+                    }
+                    else if (cookie.getName().equals("visitNumberBeforeNoon")) {
+                        visitNumberBeforeNoon = Integer.valueOf(cookie.getValue());
                     }
                 }
             }
             
-            BaconCipherStrategy strategy = ServletHelper.getTranscriptionStrategy(strategy_character.charAt(0));
+            visitNumber++;
+            Cookie cookie = new Cookie("visitNumber", visitNumber.toString());
+            response.addCookie(cookie);
+            if (ServletHelper.getCurrentHour() > 12) {
+                visitNumberAfterNoon++;
+                cookie = new Cookie("visitNumberAfterNoon", visitNumberAfterNoon.toString());
+                response.addCookie(cookie);
+
+            }
+            else {
+                visitNumberBeforeNoon++;
+                cookie = new Cookie("visitNumberBeforeNoon", visitNumberBeforeNoon.toString());
+                response.addCookie(cookie);
+            }
+
+            BaconCipherStrategy strategy = ServletHelper.getTranscriptionStrategy(strategyCharacter.charAt(0));
             this.transcriptor.setStrategy(strategy);
             try {
                 String decryptedMessage = this.startDecryptionFlow(messageToDecrypt);
                 out.println("The result of decryption is:\n"+decryptedMessage);
-                HistoryModel history = new HistoryModel(mode,strategy_character,ServletHelper.shortTheMessage(messageToDecrypt), ServletHelper.shortTheMessage(decryptedMessage));
+                HistoryModel history = new HistoryModel(mode,strategyCharacter,ServletHelper.shortTheMessage(messageToDecrypt), ServletHelper.shortTheMessage(decryptedMessage));
                 try {
                     historyDao.insertHistoryDataIntoTable(history);
                 } catch (SQLException ex) {
                     errorCounter++;
-                    Cookie cookie = new Cookie("errorCounter", errorCounter.toString());
+                    cookie = new Cookie("errorCounter", errorCounter.toString());
                     response.addCookie(cookie);
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());            
                 }
             }
             catch (EncryptionFailed exc) {
                 errorCounter++;
-                Cookie cookie = new Cookie("errorCounter", errorCounter.toString());
+                cookie = new Cookie("errorCounter", errorCounter.toString());
                 response.addCookie(cookie);
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, exc.getMessage());            
             }
             out.println("<h3>Total errors: " + errorCounter + "</h3>");
+            out.println("<h3>Total visits: " + visitNumber + "</h3>");
+            out.println("<h3>Total visits before noon: " + visitNumberBeforeNoon + "</h3>");
+            out.println("<h3>Total visits after noon: " + visitNumberAfterNoon + "</h3>");
+
             getServletContext().getRequestDispatcher("/History").include(request, response);
         }
     }
@@ -121,7 +153,9 @@ public class DecryptionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try ( PrintWriter out = response.getWriter()) {
+        out.print("Get method is not allowed");
+        }
     }
 
     /**

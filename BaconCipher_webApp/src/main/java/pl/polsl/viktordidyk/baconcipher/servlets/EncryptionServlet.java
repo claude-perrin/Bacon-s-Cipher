@@ -40,9 +40,10 @@ import pl.polsl.viktordidyk.baconcipher.model.helper.FileManager;
 public class EncryptionServlet extends HttpServlet {
 
     private final Transcriptor transcriptor;
-    private HistoryDAO historyDao;
     private String mode = "encryption";
-    FileManager fileManager;
+    private HistoryDAO historyDao;
+    private FileManager fileManager;
+
     
     /**
      * loads transcriptor
@@ -55,12 +56,13 @@ public class EncryptionServlet extends HttpServlet {
             this.historyDao = HistoryDAO.getInstance();
         } catch (ClassNotFoundException | SQLException ex) {
             ex.printStackTrace();
-        }    
-    }
+        }
+    } 
+
    
     /**
      * Pass encryption arguments to model
-     * @param filecontent
+     * @param messageToEncrypt
      * @return
      * @throws EncryptionFailed
      * @throws FileNotFoundException 
@@ -85,46 +87,77 @@ public class EncryptionServlet extends HttpServlet {
 
         try ( PrintWriter out = response.getWriter()) {
             Integer errorCounter = 0;
+            Integer visitNumber = 0;
+            Integer visitNumberBeforeNoon = 0;
+            Integer visitNumberAfterNoon = 0;
+
             HttpSession session = request.getSession();
+
+
+            Part filePart = request.getPart("encryptionFile");
+            String strategyCharacter = request.getParameter("strategyForEncryption");
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
                     if (cookie.getName().equals("errorCounter")) {
                         errorCounter = Integer.valueOf(cookie.getValue());
-                        break;
+                    }
+                    else if (cookie.getName().equals("visitNumber")) {
+                        visitNumber = Integer.valueOf(cookie.getValue());
+                    }
+                    else if (cookie.getName().equals("visitNumberAfterNoon")) {
+                        visitNumberAfterNoon = Integer.valueOf(cookie.getValue());
+                    }
+                    else if (cookie.getName().equals("visitNumberBeforeNoon")) {
+                        visitNumberBeforeNoon = Integer.valueOf(cookie.getValue());
                     }
                 }
             }
-            
-            Part filePart = request.getPart("encryptionFile");
-            String strategy_character = request.getParameter("strategyForEncryption");
 
-            BaconCipherStrategy strategy = ServletHelper.getTranscriptionStrategy(strategy_character.charAt(0));
+            visitNumber++;
+            Cookie cookie = new Cookie("visitNumber", visitNumber.toString());
+            response.addCookie(cookie);
+            if (ServletHelper.getCurrentHour() > 12) {
+                visitNumberAfterNoon++;
+                cookie = new Cookie("visitNumberAfterNoon", visitNumberAfterNoon.toString());
+                response.addCookie(cookie);
+
+            }
+            else {
+                visitNumberBeforeNoon++;
+                cookie = new Cookie("visitNumberBeforeNoon", visitNumberBeforeNoon.toString());
+                response.addCookie(cookie);
+            }
+
+            BaconCipherStrategy strategy = ServletHelper.getTranscriptionStrategy(strategyCharacter.charAt(0));
             this.transcriptor.setStrategy(strategy);
             InputStream filecontent = filePart.getInputStream();
             String messageToEncrypt = fileManager.readTxtFromInputStream(filecontent);
             try {
                 String encryptedMessage = this.startEncryptionFlow(messageToEncrypt);
-                out.println("Encrypted message is: \n" + encryptedMessage);
-               
-                HistoryModel history = new HistoryModel(mode,strategy_character,ServletHelper.shortTheMessage(messageToEncrypt), ServletHelper.shortTheMessage(encryptedMessage));
+                out.println("Encrypted message is: \n" + encryptedMessage);                
+                HistoryModel history = new HistoryModel(mode,strategyCharacter,ServletHelper.shortTheMessage(messageToEncrypt), ServletHelper.shortTheMessage(encryptedMessage));
                 try {
                     historyDao.insertHistoryDataIntoTable(history);
                 } catch (SQLException ex) {
                     errorCounter++;
-                    Cookie cookie = new Cookie("errorCounter", errorCounter.toString());
+                    cookie = new Cookie("errorCounter", errorCounter.toString());
                     response.addCookie(cookie);
                     response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());            
                 }
             }
             catch (EncryptionFailed | FileNotFoundException exc) {
                 errorCounter++;
-                Cookie cookie = new Cookie("errorCounter", errorCounter.toString());
+                cookie = new Cookie("errorCounter", errorCounter.toString());
                 response.addCookie(cookie);
                 response.sendError(HttpServletResponse.SC_BAD_REQUEST, exc.getMessage());
 
             }
             out.println("<h3>Total errors: " + errorCounter + "</h3>");
+            out.println("<h3>Total visits: " + visitNumber + "</h3>");
+            out.println("<h3>Total visits before noon: " + visitNumberBeforeNoon + "</h3>");
+            out.println("<h3>Total visits after noon: " + visitNumberAfterNoon + "</h3>");
+
             getServletContext().getRequestDispatcher("/History").include(request, response);
         }
     }
@@ -141,7 +174,9 @@ public class EncryptionServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        try ( PrintWriter out = response.getWriter()) {
+        out.print("Get method is not allowed");
+        }
     }
 
     /**

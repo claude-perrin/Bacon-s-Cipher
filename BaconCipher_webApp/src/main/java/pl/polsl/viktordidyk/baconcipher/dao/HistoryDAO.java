@@ -32,11 +32,12 @@ public final class HistoryDAO {
         return instance;
     }
     
-    public void setUpDbSchema() throws SQLException {
+    
+    public void setUpDbSchema() throws SQLException  {
         this.createTableHistory();
     }
-    
-    public void createTableHistory() throws SQLException{
+
+    private void createTableHistory() throws SQLException{
         this.query = HistoryParser.createHistoryTableSqlStatement();
         this.statement = this.connection.createStatement();
         this.statement.executeUpdate(this.query);
@@ -69,4 +70,5 @@ public final class HistoryDAO {
         this.statement.close();   
         return histories;
     }
+    
 }

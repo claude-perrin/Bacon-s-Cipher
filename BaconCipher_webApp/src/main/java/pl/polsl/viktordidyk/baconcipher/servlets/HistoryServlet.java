@@ -22,7 +22,7 @@ import pl.polsl.viktordidyk.baconcipher.dao.HistoryDAO;
 import pl.polsl.viktordidyk.baconcipher.entities.HistoryModel;
 
 /**
- * Servlet that loads history and displays it in a form of a table
+ * Servlet that loads history from database and displays it in a form of a table
  * @author Viktor Didyk
  */
 @WebServlet(name = "History", urlPatterns = {"/History"})
