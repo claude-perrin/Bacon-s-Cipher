@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
+import pl.polsl.viktordidyk.baconcipher.dao.HistoryDAO;
+import pl.polsl.viktordidyk.baconcipher.entities.HistoryModel;
 import pl.polsl.viktordidyk.baconcipher.model.BaconCipherStrategy;
 import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
@@ -37,14 +40,23 @@ import pl.polsl.viktordidyk.baconcipher.model.helper.FileManager;
 public class EncryptionServlet extends HttpServlet {
 
     private final Transcriptor transcriptor;
+    private HistoryDAO historyDao;
+    private String mode = "encryption";
+    FileManager fileManager;
     
     /**
      * loads transcriptor
      * @throws FileNotFoundException 
      */
     public EncryptionServlet() throws FileNotFoundException {
-            this.transcriptor = new Transcriptor();
-                }
+        this.fileManager = new FileManager();
+        this.transcriptor = new Transcriptor();
+        try {
+            this.historyDao = HistoryDAO.getInstance();
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+        }    
+    }
    
     /**
      * Pass encryption arguments to model
@@ -53,9 +65,7 @@ public class EncryptionServlet extends HttpServlet {
      * @throws EncryptionFailed
      * @throws FileNotFoundException 
      */
-    public String startEncryptionFlow(InputStream filecontent) throws EncryptionFailed, FileNotFoundException {
-        FileManager fileManager = new FileManager();
-        String messageToEncrypt = fileManager.readTxtFromInputStream(filecontent);
+    public String startEncryptionFlow(String messageToEncrypt) throws EncryptionFailed, FileNotFoundException {
         String encryptedMessage = this.transcriptor.encrypt(messageToEncrypt);
         return encryptedMessage;
     }
@@ -76,10 +86,6 @@ public class EncryptionServlet extends HttpServlet {
         try ( PrintWriter out = response.getWriter()) {
             Integer errorCounter = 0;
             HttpSession session = request.getSession();
-            Integer operationCounter = ServletHelper.getNumberOfOperations(session);
-
-            Part filePart = request.getPart("encryptionFile");
-            String strategy_character = request.getParameter("strategyForEncryption");
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
@@ -89,27 +95,27 @@ public class EncryptionServlet extends HttpServlet {
                     }
                 }
             }
+            
+            Part filePart = request.getPart("encryptionFile");
+            String strategy_character = request.getParameter("strategyForEncryption");
 
             BaconCipherStrategy strategy = ServletHelper.getTranscriptionStrategy(strategy_character.charAt(0));
             this.transcriptor.setStrategy(strategy);
             InputStream filecontent = filePart.getInputStream();
+            String messageToEncrypt = fileManager.readTxtFromInputStream(filecontent);
             try {
-                String encryptedMessage = this.startEncryptionFlow(filecontent);
+                String encryptedMessage = this.startEncryptionFlow(messageToEncrypt);
                 out.println("Encrypted message is: \n" + encryptedMessage);
-                operationCounter++;
-                session.setAttribute("numberOfOperations", operationCounter);
-                
-                String operationResult;
-                if (encryptedMessage.length() > 50) {
-                    operationResult = encryptedMessage.substring(0, 50);
-                    operationResult += "...";
+               
+                HistoryModel history = new HistoryModel(mode,strategy_character,ServletHelper.shortTheMessage(messageToEncrypt), ServletHelper.shortTheMessage(encryptedMessage));
+                try {
+                    historyDao.insertHistoryDataIntoTable(history);
+                } catch (SQLException ex) {
+                    errorCounter++;
+                    Cookie cookie = new Cookie("errorCounter", errorCounter.toString());
+                    response.addCookie(cookie);
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());            
                 }
-                else {
-                    operationResult = encryptedMessage;
-                }
-                String inputFileName = Paths.get(filePart.getSubmittedFileName()).getFileName().toString();
-                String operationData = operationCounter.toString() + "^" + "Encryption" + "^" + inputFileName+ "^" + operationResult;
-                session.setAttribute(operationCounter.toString()+"operationData", operationData);
             }
             catch (EncryptionFailed | FileNotFoundException exc) {
                 errorCounter++;

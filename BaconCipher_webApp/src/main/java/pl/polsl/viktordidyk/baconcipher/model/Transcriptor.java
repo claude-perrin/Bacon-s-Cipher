@@ -19,7 +19,7 @@ import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 public class Transcriptor {
     private BaconCipherStrategy transcriptionStrategy;
     private final MessageValidator messageValidator;
-    private final String filePath = "/files/transcriptionRules.csv";
+    private final String filePath = "files/transcriptionRules.csv";
     private final Map<Character, String> transcriptionRules;
     private FileManager fileManager;
     
@@ -69,9 +69,9 @@ public class Transcriptor {
      * @throws EncryptionFailed 
      */
     public String encrypt(String message) throws EncryptionFailed {
-            String messageToEncrypt = message.replaceAll("[\\s,.]+","");
-            messageValidator.validateMessage(messageToEncrypt);
-            return transcriptionStrategy.encrypt(messageToEncrypt);
+        String messageToEncrypt = message.replaceAll("[\\s,.]+","");
+        messageValidator.validateMessage(messageToEncrypt);
+        return transcriptionStrategy.encrypt(messageToEncrypt);
     }
     
     /**

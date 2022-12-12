@@ -7,12 +7,19 @@ package pl.polsl.viktordidyk.baconcipher.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import pl.polsl.viktordidyk.baconcipher.dao.HistoryDAO;
+import pl.polsl.viktordidyk.baconcipher.entities.HistoryModel;
 
 /**
  * Servlet that loads history and displays it in a form of a table
@@ -20,6 +27,15 @@ import javax.servlet.http.HttpSession;
  */
 @WebServlet(name = "History", urlPatterns = {"/History"})
 public class HistoryServlet extends HttpServlet {
+    private HistoryDAO historyDao;
+    
+    public HistoryServlet(){
+        try {
+            this.historyDao = HistoryDAO.getInstance();
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -51,21 +67,27 @@ public class HistoryServlet extends HttpServlet {
                                <tr>
                                  <th>Number</th>
                                  <th>Operation</th>
+                                <th>Strategy</th>
                                  <th>Input</th>
                                  <th>Result</th>
                                </tr>
                        """);
-            if (session != null) {
-                Integer numberOfOperations = (Integer) session.getAttribute("numberOfOperations");
-                for (int i = 1; i <= numberOfOperations; i++) {
-                    String[] operationData = ((String) session.getAttribute(i + "operationData")).split("\\^");
+            List<HistoryModel> histories;
+            try {
+                histories = historyDao.getHistories();
+                for (HistoryModel i : histories) {
                     out.println("<tr>");
-                    out.println("<td>" + operationData[0] + "</td>");
-                    out.println("<td>" + operationData[1] + "</td>");
-                    out.println("<td>" + operationData[2] + "</td>");
-                    out.println("<td>" + operationData[3] + "</td>");
+                    out.println("<td>" + i.getId()+ "</td>");
+                    out.println("<td>" + i.getTranscriptionMode() + "</td>");
+                    out.println("<td>" + i.getStrategy() + "</td>");
+                    out.println("<td>" + i.getOriginalMessage() + "</td>");
+                    out.println("<td>" + i.getTranscriptedMessage() + "</td>");
                     out.println("</tr>");
+
                 }
+            } catch (SQLException ex) {
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());            
+
             }
             out.print("""     
                           </table>

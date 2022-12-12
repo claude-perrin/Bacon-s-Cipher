@@ -6,6 +6,6 @@
 /**
  * Servlets for handling POST and GET request from.
  * Responsible for passing output to the user and giving the correct input to the model.
- * @authot ViktorDidyk
+ * @author ViktorDidyk
  */
 package pl.polsl.viktordidyk.baconcipher.servlets;

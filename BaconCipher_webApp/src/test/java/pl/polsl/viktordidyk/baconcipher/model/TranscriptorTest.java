@@ -5,13 +5,15 @@
 package pl.polsl.viktordidyk.baconcipher.model;
 
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.io.IOException;
+import java.io.InputStream;
 import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
+import pl.polsl.viktordidyk.baconcipher.model.helper.FileManager;
+
 
 
 /**
@@ -63,22 +65,25 @@ public class TranscriptorTest {
     @Test
     public void testEncryptStrategyA() {
         String binaryEncryption = "abbbbabaaaaabba";
-        String fileName = "testEncrypt.txt";
+        String fileName = "files/testEncrypt.txt";
         StrategyA strategyA = new StrategyA();
         this.transcriptor.setStrategy(strategyA);
+        FileManager filemanager = new FileManager();
         try {
-
-            String encryptionResult = transcriptor.encrypt(fileName);
-            for (int i=0; i<binaryEncryption.length(); i++) {
-                if (binaryEncryption.charAt(i) == 'a' && Character.isLowerCase(encryptionResult.charAt(i))) {
-                    fail("The character at the position <" +i+"> should be uppercase");
-                }
-                if (binaryEncryption.charAt(i) == 'b' && Character.isUpperCase(encryptionResult.charAt(i))) {
-                    fail("The character at the position <" +i+"> should be lowercase");
+            try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(fileName)) {
+                String messageToEncrypt = filemanager.readTxtFromInputStream(inputStream);
+                String encryptionResult = transcriptor.encrypt(messageToEncrypt);
+                for (int i=0; i<binaryEncryption.length(); i++) {
+                    if (binaryEncryption.charAt(i) == 'a' && Character.isLowerCase(encryptionResult.charAt(i))) {
+                        fail("The character at the position <" +i+"> should be uppercase");
+                    }
+                    if (binaryEncryption.charAt(i) == 'b' && Character.isUpperCase(encryptionResult.charAt(i))) {
+                        fail("The character at the position <" +i+"> should be lowercase");
+                    }
                 }
             }
         } 
-        catch (EncryptionFailed ex) {
+        catch (EncryptionFailed | IOException ex) {
             fail("File is not found");
         }
 
@@ -86,20 +91,24 @@ public class TranscriptorTest {
     
     @Test
     public void testEncrypStrategyB() {
-            String binaryEncryption = "abbbbabaaaaabba";
-        String fileName = "testEncrypt.txt";
+        String binaryEncryption = "abbbbabaaaaabba";
+        String fileName = "files/testEncrypt.txt";
         StrategyB strategyB = new StrategyB();
         this.transcriptor.setStrategy(strategyB);
+        FileManager filemanager = new FileManager();
         try {
-            String encryptionResult = transcriptor.encrypt(fileName);
-            for (int i=0; i<binaryEncryption.length(); i++) {
-                if (binaryEncryption.charAt(i) == transcriptor.getTranscriptionStrategy().useStrategyTranscriptionAlgorithm(encryptionResult.charAt(i))) {
-                    continue;
+            try (InputStream inputStream = this.getClass().getClassLoader().getResourceAsStream(fileName)) {
+                String messageToEncrypt = filemanager.readTxtFromInputStream(inputStream);
+                String encryptionResult = transcriptor.encrypt(messageToEncrypt);
+                for (int i=0; i<binaryEncryption.length(); i++) {
+                    if (binaryEncryption.charAt(i) == transcriptor.getTranscriptionStrategy().useStrategyTranscriptionAlgorithm(encryptionResult.charAt(i))) {
+                        continue;
+                    }
+                    fail("The character at the position <" +i+"> is encrypted incorrectly");
                 }
-                fail("The character at the position <" +i+"> is encrypted incorrectly");
             }
-        } 
-        catch (EncryptionFailed ex) {
+        }
+        catch (EncryptionFailed | IOException ex) {
             fail("File is not found");
         }
     }

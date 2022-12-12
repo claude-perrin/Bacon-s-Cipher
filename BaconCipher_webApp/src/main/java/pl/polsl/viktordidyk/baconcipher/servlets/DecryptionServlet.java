@@ -8,13 +8,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import pl.polsl.viktordidyk.baconcipher.dao.HistoryDAO;
+import pl.polsl.viktordidyk.baconcipher.entities.HistoryModel;
 import pl.polsl.viktordidyk.baconcipher.model.BaconCipherStrategy;
 import pl.polsl.viktordidyk.baconcipher.model.Transcriptor;
 import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
@@ -27,14 +31,20 @@ import pl.polsl.viktordidyk.baconcipher.model.exceptions.EncryptionFailed;
 public class DecryptionServlet extends HttpServlet {
 
     private final Transcriptor transcriptor;
-    
+    private HistoryDAO historyDao;
+    private String mode = "decryption";
     /**
      * Load transcriptor
      * @throws FileNotFoundException 
      */
     public DecryptionServlet() throws FileNotFoundException {
+        try {
+            this.historyDao = HistoryDAO.getInstance();
+        } catch (ClassNotFoundException | SQLException ex) {
+            ex.printStackTrace();
+        }   
         this.transcriptor = new Transcriptor();
-        }
+    }
    
     /**
      * Pass decryption arguments to model
@@ -60,10 +70,7 @@ public class DecryptionServlet extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try ( PrintWriter out = response.getWriter()) {
-            Integer errorCounter = 0;
-            HttpSession session = request.getSession();
-            Integer operationCounter = ServletHelper.getNumberOfOperations(session);
-            
+            Integer errorCounter = 0;            
             String strategy_character = request.getParameter("strategyForDecryption");
             String messageToDecrypt = request.getParameter("decryption");
             Cookie[] cookies = request.getCookies();
@@ -81,20 +88,15 @@ public class DecryptionServlet extends HttpServlet {
             try {
                 String decryptedMessage = this.startDecryptionFlow(messageToDecrypt);
                 out.println("The result of decryption is:\n"+decryptedMessage);
-                operationCounter++;
-                session.setAttribute("numberOfOperations", operationCounter);
-                
-                String operationResult;
-                if (messageToDecrypt.length() > 50) {
-                    operationResult = messageToDecrypt.substring(0, 50);
-                    operationResult += "...";
+                HistoryModel history = new HistoryModel(mode,strategy_character,ServletHelper.shortTheMessage(messageToDecrypt), ServletHelper.shortTheMessage(decryptedMessage));
+                try {
+                    historyDao.insertHistoryDataIntoTable(history);
+                } catch (SQLException ex) {
+                    errorCounter++;
+                    Cookie cookie = new Cookie("errorCounter", errorCounter.toString());
+                    response.addCookie(cookie);
+                    response.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());            
                 }
-                else {
-                    operationResult = messageToDecrypt;
-                }
-                
-                String operationData = operationCounter.toString() + "^" + "Decryption" + "^" + operationResult+ "^" + decryptedMessage;
-                session.setAttribute(operationCounter.toString()+"operationData", operationData);
             }
             catch (EncryptionFailed exc) {
                 errorCounter++;
